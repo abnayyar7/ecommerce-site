@@ -1,0 +1,30 @@
+:root {
+  /* Brand */
+  --color-base: #24747c;
+
+  /* Main CTA buttons */
+  --primary-color: #24747c;
+
+  /* Hover / Accent */
+  --secondary-color: #2f98a3;
+
+  /* Primary text */
+  --text-color: #24343a;
+
+  /* Typography */
+  --font-xl: 2rem;
+  --font-lg: 1.25rem;
+  --font-md: 1rem;
+  --font-sm: 0.875rem;
+
+  /* Theme */
+  --color-bg: #24747c;
+  --color-text: #ffffff;
+
+  /* Cards / Sections */
+  --color-inverted-bg: #f7fbfc;
+  --color-inverted-text: #24343a;
+
+  /* Loader overlay */
+  --color-loader-bg: rgba(36, 116, 124, 0.35);
+}
