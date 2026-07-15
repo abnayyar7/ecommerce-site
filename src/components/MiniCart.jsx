@@ -6,11 +6,13 @@ import { FiX } from "react-icons/fi";
 import { ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import CartItem from "@/components/CartItem";
+import { useProductStore } from "@/app/_zustand/store";
 
 const MiniCart = ({ isOpen, onClose, cartData, onCountChange, fetchCart }) => {
   const router = useRouter();
   const [items, setItems] = useState([]);
   const cartRef = useRef(null);
+  const syncFromServerCart = useProductStore((state) => state.syncFromServerCart);
 
   // ── Sync passed cartData to local state ──────────────────────────────────
   useEffect(() => {
@@ -41,14 +43,16 @@ const MiniCart = ({ isOpen, onClose, cartData, onCountChange, fetchCart }) => {
           }),
         });
         if (!res.ok) throw new Error();
-        // Refetch to sync
-        await fetchCart?.();
+        // Refetch to sync (and push the fresh data into the shared
+        // cart store so /cart doesn't show stale quantities)
+        const freshCart = await fetchCart?.();
+        if (freshCart) syncFromServerCart(freshCart);
       } catch {
         setItems(prev);
         onCountChange?.(prev.reduce((s, i) => s + i.quantity, 0));
       }
     },
-    [items, onCountChange, fetchCart],
+    [items, onCountChange, fetchCart, syncFromServerCart],
   );
 
   const handleDecrease = useCallback(
@@ -68,8 +72,10 @@ const MiniCart = ({ isOpen, onClose, cartData, onCountChange, fetchCart }) => {
             }),
           });
           if (!res.ok) throw new Error();
-          // Refetch to sync
-          await fetchCart?.();
+          // Refetch to sync (and push the fresh data into the shared
+          // cart store so /cart doesn't show stale quantities)
+          const freshCart = await fetchCart?.();
+          if (freshCart) syncFromServerCart(freshCart);
         } catch {
           setItems(prev);
           onCountChange?.(prev.reduce((s, i) => s + i.quantity, 0));
@@ -93,14 +99,16 @@ const MiniCart = ({ isOpen, onClose, cartData, onCountChange, fetchCart }) => {
           }),
         });
         if (!res.ok) throw new Error();
-        // Refetch to sync
-        await fetchCart?.();
+        // Refetch to sync (and push the fresh data into the shared
+        // cart store so /cart doesn't show stale quantities)
+        const freshCart = await fetchCart?.();
+        if (freshCart) syncFromServerCart(freshCart);
       } catch {
         setItems(prev);
         onCountChange?.(prev.reduce((s, i) => s + i.quantity, 0));
       }
     },
-    [items, onCountChange, fetchCart],
+    [items, onCountChange, fetchCart, syncFromServerCart],
   );
 
   const handleRemove = useCallback(
@@ -119,14 +127,16 @@ const MiniCart = ({ isOpen, onClose, cartData, onCountChange, fetchCart }) => {
           }),
         });
         if (!res.ok) throw new Error();
-        // Refetch to sync
-        await fetchCart?.();
+        // Refetch to sync (and push the fresh data into the shared
+        // cart store so /cart doesn't show stale quantities)
+        const freshCart = await fetchCart?.();
+        if (freshCart) syncFromServerCart(freshCart);
       } catch {
         setItems(prev);
         onCountChange?.(prev.reduce((s, i) => s + i.quantity, 0));
       }
     },
-    [items, onCountChange, fetchCart],
+    [items, onCountChange, fetchCart, syncFromServerCart],
   );
 
   const handleCheckout = () => {

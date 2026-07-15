@@ -15,10 +15,12 @@ const CartElement = () => {
       if (res.ok) {
         setCartData(data);
         setCartCount(data.allQuantity ?? 0);
+        return data;
       }
     } catch (err) {
       console.error("Failed to fetch cart:", err);
     }
+    return null;
   }, []);
 
   useEffect(() => {
@@ -36,6 +38,13 @@ const CartElement = () => {
 
     window.addEventListener("itemAddedToCart", handleItemAdded);
     return () => window.removeEventListener("itemAddedToCart", handleItemAdded);
+  }, [fetchCart]);
+
+  // ── Silently resync whenever the cart changes elsewhere (checkout,
+  //    the /cart page, login-merge, etc.) so this badge never goes stale ──
+  useEffect(() => {
+    window.addEventListener("cartDataChanged", fetchCart);
+    return () => window.removeEventListener("cartDataChanged", fetchCart);
   }, [fetchCart]);
 
   return (

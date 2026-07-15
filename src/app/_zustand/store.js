@@ -1,6 +1,17 @@
 import { create } from "zustand";
 
 /**
+ * Notify other cart UI (e.g. the header badge/mini-cart, which keeps its
+ * own independent fetch of /api/cart) that the cart changed here, so it
+ * can silently refetch instead of drifting out of sync.
+ */
+const notifyCartDataChanged = () => {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("cartDataChanged"));
+  }
+};
+
+/**
  * Map a server cart item to the local product shape used by UI components.
  */
 const mapServerItem = (item) => ({
@@ -69,6 +80,7 @@ export const useProductStore = create()((set, get) => ({
       }
 
       const data = await res.json();
+      notifyCartDataChanged();
       return {
         ok: true,
         status: res.status,
@@ -114,6 +126,7 @@ export const useProductStore = create()((set, get) => ({
       body: JSON.stringify({ productId: id, selectedSize }),
     });
     get().calculateTotals();
+    notifyCartDataChanged();
   },
 
   // ─── Clear all cart ───────────────────────────────────────────────
@@ -128,6 +141,7 @@ export const useProductStore = create()((set, get) => ({
       method: "POST",
       credentials: "include",
     });
+    notifyCartDataChanged();
   },
 
   // ─── Update cart item quantity ────────────────────────────────────
@@ -159,6 +173,7 @@ export const useProductStore = create()((set, get) => ({
       }
     }
     get().calculateTotals();
+    notifyCartDataChanged();
   },
 
   // ─── Calculate totals ─────────────────────────────────────────────
@@ -194,10 +209,21 @@ export const useProductStore = create()((set, get) => ({
         hasHydrated: true,
       });
       get().calculateTotals();
+      notifyCartDataChanged();
     } catch (err) {
       console.error("Cart hydration failed:", err);
       set({ isHydrating: false, hasHydrated: true });
     }
+  },
+
+  // ─── Sync from an already-fetched server cart response ────────────
+  // For UI that fetches /api/cart itself for its own display (the
+  // header mini-cart dropdown) so this store's `products` doesn't
+  // drift out of sync without an extra network round trip.
+  syncFromServerCart: (cart) => {
+    const updatedProducts = (cart?.items || []).map(mapServerItem);
+    set({ products: updatedProducts });
+    get().calculateTotals();
   },
 
   // ─── Merge guest → user cart on login, then re-hydrate ────────────
@@ -225,6 +251,7 @@ export const useProductStore = create()((set, get) => ({
         hasHydrated: true,
       });
       get().calculateTotals();
+      notifyCartDataChanged();
     } catch (err) {
       console.error("Merge + hydrate failed:", err);
       set({ isHydrating: false, hasHydrated: true });
