@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import Providers from "@/provider/Providers";
 import CartHydrator from "@/provider/CartHydrator";
 import { BRAND } from "@/config/brand";
+import { Analytics } from "@vercel/analytics/next";
 import "keen-slider/keen-slider.min.css";
 
 export const metadata = {
@@ -44,6 +45,7 @@ export default async function RootLayout({ children }) {
           </CartHydrator>
           <Footer />
         </AuthProvider>
+        <Analytics />
       </body>
     </html>
   );
