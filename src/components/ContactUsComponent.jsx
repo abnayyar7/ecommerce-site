@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { Mail, Phone, MapPin } from "lucide-react";
+import { BRAND } from "@/config/brand";
 
 export default function ContactUsComponent() {
   useEffect(() => {
@@ -10,13 +11,12 @@ export default function ContactUsComponent() {
   }, []);
 
   const contactInfo = {
-    company: "Example Store Inc.",
-    email: "support@example.com",
-    phone: "+1 555-555-5555",
-    address: "123 Main Street, Your City, Your State, 12345",
-    mapUrl: "https://maps.google.com",
-    mapEmbedUrl:
-      "https://maps.google.com/maps?q=123+Main+Street,+Your+City,+Your+State&output=embed",
+    company: BRAND.legalName,
+    email: BRAND.email,
+    phone: BRAND.phone,
+    address: `${BRAND.address.line1}, ${BRAND.address.line2}, ${BRAND.address.state} ${BRAND.address.pincode}`,
+    mapUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(BRAND.address.mapsQuery)}`,
+    mapEmbedUrl: `https://maps.google.com/maps?q=${encodeURIComponent(BRAND.address.mapsQuery)}&output=embed`,
   };
 
   return (
@@ -157,9 +157,9 @@ export default function ContactUsComponent() {
                   Our Office Location
                 </h3>
                 <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                  Visit our office headquarters in Your City. Our team is here
-                  to assist with any inquiries or collaborations. Use the map to
-                  find exact directions.
+                  Visit our office headquarters in {BRAND.address.line2}. Our
+                  team is here to assist with any inquiries or collaborations.
+                  Use the map to find exact directions.
                 </p>
                 <a
                   href={contactInfo.mapUrl}
@@ -183,11 +183,11 @@ export default function ContactUsComponent() {
             {[
               {
                 q: "What's the best way to reach you?",
-                a: "Email us at support@example.com or call +1 555-555-5555. We respond to inquiries within 24 hours.",
+                a: `Email us at ${BRAND.email} or call ${BRAND.phone}. We respond to inquiries within 24 hours.`,
               },
               {
                 q: "Where is your office located?",
-                a: "Our office is located in Your City. Visit us during business hours or email/call for virtual consultations.",
+                a: `Our office is located in ${BRAND.address.line2}. Visit us during business hours or email/call for virtual consultations.`,
               },
               {
                 q: "What are your customer support hours?",

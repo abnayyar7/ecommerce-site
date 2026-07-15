@@ -1,3 +1,5 @@
+import { BRAND } from "@/config/brand";
+
 export default function robots() {
   const isProd = process.env.NODE_ENV === "production";
   return {
@@ -8,7 +10,7 @@ export default function robots() {
         disallow: isProd ? [] : ["/"],
       },
     ],
-    sitemap: isProd ? "https://example.com/sitemap.xml" : undefined,
-    host: "https://example.com/",
+    sitemap: isProd ? `${BRAND.siteUrl}/sitemap.xml` : undefined,
+    host: `${BRAND.siteUrl}/`,
   };
 }

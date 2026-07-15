@@ -1,9 +1,9 @@
 // app/privacy-policy/page.jsx
+import { BRAND } from "@/config/brand";
 
 export const metadata = {
-  title: "Privacy Policy | Example Store",
-  description:
-    "Understand how Example Store collects and protects your personal information.",
+  title: `Privacy Policy | ${BRAND.name}`,
+  description: `Understand how ${BRAND.name} collects and protects your personal information.`,
 };
 
 export default function PrivacyPolicyPage() {
@@ -17,7 +17,7 @@ export default function PrivacyPolicyPage() {
 
         <section className="space-y-6 text-gray-700 leading-relaxed">
           <p>
-            At <strong>Example Store</strong> ("we," "our," or "us"), your
+            At <strong>{BRAND.name}</strong> ("we," "our," or "us"), your
             privacy is important to us. This Privacy Policy explains how we
             collect, use, disclose, and safeguard your personal information when
             you visit this website ("Site") and use our services.
@@ -168,14 +168,18 @@ export default function PrivacyPolicyPage() {
             <li>
               Email:{" "}
               <a
-                href="mailto:support@example.com"
+                href={`mailto:${BRAND.email}`}
                 className="text-[var(--color-inverted-text)]"
               >
-                support@example.com
+                {BRAND.email}
               </a>
             </li>
-            <li>Phone: +1 555-555-5555</li>
-            <li>Address: 123 Main Street, Your City, Your State, 12345</li>
+            <li>Phone: {BRAND.phone}</li>
+            <li>
+              Address: {BRAND.address.line1}, {BRAND.address.line2},{" "}
+              {BRAND.address.state} {BRAND.address.pincode},{" "}
+              {BRAND.address.country}
+            </li>
           </ul>
         </section>
       </div>

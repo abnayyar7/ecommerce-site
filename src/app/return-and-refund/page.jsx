@@ -1,5 +1,7 @@
+import { BRAND } from "@/config/brand";
+
 export const metadata = {
-  title: "Refund & Return Policy | Example Store",
+  title: `Refund & Return Policy | ${BRAND.name}`,
   description:
     "Read our Refund & Return Policy to learn how returns, exchanges, and refunds are handled.",
 };
@@ -17,7 +19,7 @@ export default function RefundReturnPolicyPage() {
 
         <section className="space-y-6 text-gray-700 leading-relaxed">
           <p>
-            At <strong>Example Store</strong> we want you to be completely
+            At <strong>{BRAND.name}</strong> we want you to be completely
             satisfied with your purchase. This Refund &amp; Return Policy
             explains how to return items, exchange products, and obtain refunds.
             Please read carefully before placing an order.
@@ -64,12 +66,12 @@ export default function RefundReturnPolicyPage() {
             <li>
               Contact our support team within the returns window at{" "}
               <a
-                href="mailto:support@example.com"
+                href={`mailto:${BRAND.email}`}
                 className="text-[var(--color-inverted-text)] underline"
               >
-                support@example.com
+                {BRAND.email}
               </a>{" "}
-              or call +1 555-555-5555.
+              or call {BRAND.phone}.
             </li>
             <li>
               Provide your order number, product details, photos showing the
@@ -184,14 +186,18 @@ export default function RefundReturnPolicyPage() {
             <li>
               Email:{" "}
               <a
-                href="mailto:support@example.com"
+                href={`mailto:${BRAND.email}`}
                 className="text-[var(--color-inverted-text)]"
               >
-                support@example.com
+                {BRAND.email}
               </a>
             </li>
-            <li>Phone: +1 555-555-5555</li>
-            <li>Address: 123 Main Street, Your City, Your State, 12345</li>
+            <li>Phone: {BRAND.phone}</li>
+            <li>
+              Address: {BRAND.address.line1}, {BRAND.address.line2},{" "}
+              {BRAND.address.state} {BRAND.address.pincode},{" "}
+              {BRAND.address.country}
+            </li>
           </ul>
 
           <h2 className="text-xl font-semibold text-gray-800">

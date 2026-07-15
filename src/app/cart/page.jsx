@@ -1,7 +1,8 @@
 import { CartClient } from "@/components";
+import { BRAND } from "@/config/brand";
 
 export const metadata = {
-  title: "Your Cart | Example Store",
+  title: `Your Cart | ${BRAND.name}`,
 };
 
 const CartPage = () => {

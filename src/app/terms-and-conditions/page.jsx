@@ -1,7 +1,8 @@
+import { BRAND } from "@/config/brand";
+
 export const metadata = {
-  title: "Terms & Conditions | Example Store",
-  description:
-    "Review the terms and conditions for using this sample e-commerce website.",
+  title: `Terms & Conditions | ${BRAND.name}`,
+  description: `Review the terms and conditions for using the ${BRAND.name} website.`,
 };
 
 export default function TermsAndConditionsPage() {
@@ -15,8 +16,8 @@ export default function TermsAndConditionsPage() {
 
         <section className="space-y-6 text-gray-700 leading-relaxed">
           <p>
-            Welcome to <strong>Example Store</strong> ("we," "our," "us"). By
-            using this sample website ("Site"), you agree to comply with and be
+            Welcome to <strong>{BRAND.name}</strong> ("we," "our," "us"). By
+            using this website ("Site"), you agree to comply with and be
             bound by these Terms and Conditions. Please read them carefully
             before using our services.
           </p>
@@ -151,7 +152,7 @@ export default function TermsAndConditionsPage() {
           </h2>
           <p>
             These Terms are governed by the laws of India. Any disputes shall be
-            subject to the courts of Uttar Pradesh, India.
+            subject to the courts of {BRAND.jurisdiction}.
           </p>
 
           <h2 className="text-xl font-semibold text-gray-800">
@@ -161,14 +162,18 @@ export default function TermsAndConditionsPage() {
             <li>
               Email:{" "}
               <a
-                href="mailto:support@example.com"
+                href={`mailto:${BRAND.email}`}
                 className="text-[var(--color-inverted-text)]"
               >
-                support@example.com
+                {BRAND.email}
               </a>
             </li>
-            <li>Phone: +1 555-555-5555</li>
-            <li>Address: 123 Main Street, Your City, Your State, 12345</li>
+            <li>Phone: {BRAND.phone}</li>
+            <li>
+              Address: {BRAND.address.line1}, {BRAND.address.line2},{" "}
+              {BRAND.address.state} {BRAND.address.pincode},{" "}
+              {BRAND.address.country}
+            </li>
           </ul>
         </section>
       </div>

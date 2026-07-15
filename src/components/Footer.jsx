@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/scripts/authOptions";
 import { Newsletter } from "@/components";
 import { getCategoriesCached } from "@/helper/Catalog";
+import { BRAND } from "@/config/brand";
 
 export default async function SiteFooter() {
   // const { data: session, status } = useSession();
@@ -14,7 +15,7 @@ export default async function SiteFooter() {
   return (
     <footer className="bg-[var(--color-bg)] text-white pt-12 pb-4 px-4 md:px-0">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:justify-between gap-10 md:gap-0 items-center md:items-start text-center md:text-left">
-        {/* Example Store brand & brief */}
+        {/* Velaura brand & brief */}
         <div className="mb-8 md:mb-0 flex-1 min-w-[230px] flex flex-col items-center text-center mx-auto md:items-start md:text-left md:mx-0">
           <Link href="/" className="flex items-center gap-3 mb-4">
             <Image
@@ -25,35 +26,32 @@ export default async function SiteFooter() {
               className="object-none"
             />
             <span className="text-2xl tracking-wider">
-              <span className="font-bold">Example</span> Store
+              <span className="font-bold">{BRAND.name}</span>
             </span>
           </Link>
-          <p className="text-white/80 mb-2 max-w-[300px]">
-            A clean e-commerce boilerplate made for fast customization and
-            launch-ready storefronts.
-          </p>
+          <p className="text-white/80 mb-2 max-w-[300px]">{BRAND.description}</p>
           <div className="flex flex-col gap-1 text-white/70 text-sm mt-3 md:items-start items-center">
             <span className="flex items-center gap-2">
-              <Mail className="w-4 h-4" /> support@example.com
+              <Mail className="w-4 h-4" /> {BRAND.email}
             </span>
             <span className="flex items-center gap-2">
               <Phone className="w-4 h-4" />{" "}
               <p>
-                <a href="tel:+15555555555">+1 555-555-5555</a>
+                <a href={BRAND.phoneHref}>{BRAND.phone}</a>
               </p>
             </span>
             <a
-              href="https://maps.google.com"
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(BRAND.address.mapsQuery)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-start gap-2 hover:text-white transition-colors text-center md:text-left"
             >
               <address className="flex items-center gap-2 not-italic">
-                <MapPin className="w-4 h-4" /> 123 Main Street
+                <MapPin className="w-4 h-4" /> {BRAND.address.line1}
                 <br />
-                Your City, Your State
+                {BRAND.address.line2}
                 <br />
-                12345
+                {BRAND.address.state} {BRAND.address.pincode}
               </address>
             </a>
           </div>
@@ -155,9 +153,8 @@ export default async function SiteFooter() {
 
       {/* Bottom bar */}
       <div className="border-t border-white/20 mt-10 pt-5 text-center text-white/70 text-sm tracking-wide">
-        &copy; {new Date().getFullYear()} Example Store. All rights reserved.
-        <span className="mx-2">|</span>
-        <span>Built with a reusable e-commerce boilerplate</span>
+        &copy; {new Date().getFullYear()} {BRAND.legalName}. All rights
+        reserved.
         {/* <Link href="/terms" className="hover:underline">
           Terms
         </Link>

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import nodemailer from "nodemailer";
+import { BRAND } from "@/config/brand";
 
 const prisma = new PrismaClient();
 
@@ -35,7 +36,7 @@ export async function POST(request) {
     await transporter.sendMail({
       from: process.env.EMAIL_FROM,
       to: email,
-      subject: "Welcome to Example Store Newsletter!",
+      subject: `Welcome to the ${BRAND.name} Style Club`,
       html: `
         <!DOCTYPE html>
 <html>
@@ -50,28 +51,28 @@ export async function POST(request) {
                 <a href="${process.env.NEXT_BASE_URL_FULL}" target="_blank">
                   <img src="${
                     process.env.NEXT_BASE_URL_FULL
-                  }/logo-header.png" alt="Example Store" style="width:84px;height:84px;border-radius:24px;display:block;border:2px solid #17103c;">
+                  }/logo-header.png" alt="${BRAND.name}" style="width:84px;height:84px;border-radius:24px;display:block;border:2px solid #1a3c40;">
                 </a>
               </td>
             </tr>
             <!-- Heading -->
             <tr>
-              <td align="center" style="font-family:sans-serif;color:#17103c;">
-                <h2 style="margin:8px 0 0 0;font-size:1.7rem;font-weight:900;letter-spacing:1px;">Welcome to <span style="color:#6ccf4e;">Example Store</span>!</h2>
-                <div style="font-size:1.1rem;font-weight:600;letter-spacing:.2px;margin:0 0 14px 0;color:#17103c;">You’re on the list for exclusive offers and updates!</div>
+              <td align="center" style="font-family:sans-serif;color:#1a3c40;">
+                <h2 style="margin:8px 0 0 0;font-size:1.7rem;font-weight:900;letter-spacing:1px;">Welcome to <span style="color:#24747C;">${BRAND.name}</span>!</h2>
+                <div style="font-size:1.1rem;font-weight:600;letter-spacing:.2px;margin:0 0 14px 0;color:#1a3c40;">You’re on the list for exclusive offers and updates!</div>
               </td>
             </tr>
             <!-- Coupon and Offer -->
             <tr>
               <td align="center" style="padding:12px 0;">
                 <div style="font-size:1.08rem;color:#3e5335;font-weight:500;margin-bottom:10px;">As a thank you, here’s a special welcome offer!</div>
-                <div style="display:inline-block;background:#6ccf4e;color:#fff;padding:12px 32px 12px 32px;font-size:1.4rem;letter-spacing:2px;font-weight:bold;border-radius:32px;box-shadow:0 1px 6px 0 #bde8b4;margin-bottom:10px;">
+                <div style="display:inline-block;background:#24747C;color:#fff;padding:12px 32px 12px 32px;font-size:1.4rem;letter-spacing:2px;font-weight:bold;border-radius:32px;box-shadow:0 1px 6px 0 #bde8b4;margin-bottom:10px;">
                   WELCOME2026
                 </div>
                 <div style="font-size:1rem;color:#4d6537;margin-top:10px;">
                   <a href="${
                     process.env.NEXT_BASE_URL_FULL
-                  }/shop" style="color:#fff;background:#17103c;padding:10px 30px;border-radius:24px;text-decoration:none;font-weight:600;display:inline-block;margin-top:12px;">
+                  }/shop" style="color:#fff;background:#1a3c40;padding:10px 30px;border-radius:24px;text-decoration:none;font-weight:600;display:inline-block;margin-top:12px;">
                     Start Shopping &rarr;
                   </a>
                 </div>
@@ -92,7 +93,7 @@ export async function POST(request) {
                 <hr style="margin-bottom:8px;">
                 <div>
                   If you did not subscribe, just ignore this email.<br>
-                  &copy; Example Store ${new Date().getFullYear()}
+                  &copy; ${BRAND.name} ${new Date().getFullYear()}
                 </div>
               </td>
             </tr>

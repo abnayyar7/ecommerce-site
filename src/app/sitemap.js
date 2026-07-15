@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { BRAND } from "@/config/brand";
 const prisma = new PrismaClient();
 
 export default async function sitemap() {
@@ -15,16 +16,16 @@ export default async function sitemap() {
     "/profile",
     "/search",
     "/shop",
-    "/wihslist",
+    "/wishlist",
   ].map((p) => ({
-    url: `https://example.com/${p}`,
+    url: `${BRAND.siteUrl}/${p}`,
     changeFrequency: "weekly",
     priority: 0.7,
   }));
   // Example: dynamic products
   const products = await prisma.product.findMany();
   const productRoutes = products.map((p) => ({
-    url: `https://example.com/api/slugs/${p.slug}`,
+    url: `${BRAND.siteUrl}/product/${p.slug}`,
     changeFrequency: "daily",
     priority: 0.9,
   }));

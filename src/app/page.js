@@ -1,7 +1,8 @@
 import { HomepageClient } from "@/components";
+import { BRAND } from "@/config/brand";
 
 export const metadata = {
-  title: "Home | Example Store",
+  title: `Home | ${BRAND.name}`,
   alternates: { canonical: "/" },
 };
 

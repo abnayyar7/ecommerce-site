@@ -1,7 +1,8 @@
 // app/shipping-delivery-policy/page.jsx
+import { BRAND } from "@/config/brand";
 
 export const metadata = {
-  title: "Shipping & Delivery Policy | Example Store",
+  title: `Shipping & Delivery Policy | ${BRAND.name}`,
   description:
     "Read our detailed Shipping & Delivery Policy to learn about delivery timelines, shipping charges, order tracking, and international delivery options.",
 };
@@ -19,7 +20,7 @@ export default function ShippingDeliveryPolicyPage() {
 
         <section className="space-y-6 text-gray-700 leading-relaxed">
           <p>
-            Welcome to <strong>Example Store</strong>! We aim to provide a
+            Welcome to <strong>{BRAND.name}</strong>! We aim to provide a
             smooth and reliable shopping experience by ensuring timely delivery
             of your orders. This Shipping &amp; Delivery Policy explains how we
             handle shipping, delivery times, order tracking, and other related
@@ -159,10 +160,10 @@ export default function ShippingDeliveryPolicyPage() {
             <li>
               Contact us at{" "}
               <a
-                href="mailto:support@example.com"
+                href={`mailto:${BRAND.email}`}
                 className="text-[var(--color-inverted-text)] underline"
               >
-                support@example.com
+                {BRAND.email}
               </a>{" "}
               with your order number.
             </li>
@@ -236,14 +237,18 @@ export default function ShippingDeliveryPolicyPage() {
             <li>
               Email:{" "}
               <a
-                href="mailto:support@example.com"
+                href={`mailto:${BRAND.email}`}
                 className="text-[var(--color-inverted-text)]"
               >
-                support@example.com
+                {BRAND.email}
               </a>
             </li>
-            <li>Phone: +1 555-555-5555</li>
-            <li>Address: 123 Main Street, Your City, Your State, 12345</li>
+            <li>Phone: {BRAND.phone}</li>
+            <li>
+              Address: {BRAND.address.line1}, {BRAND.address.line2},{" "}
+              {BRAND.address.state} {BRAND.address.pincode},{" "}
+              {BRAND.address.country}
+            </li>
           </ul>
 
           <h2 className="text-xl font-semibold text-gray-800">

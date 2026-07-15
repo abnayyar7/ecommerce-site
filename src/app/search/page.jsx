@@ -1,8 +1,9 @@
 import { Breadcrumb, Filters, Products } from "@/components";
 import React from "react";
+import { BRAND } from "@/config/brand";
 
 export const metadata = {
-  title: "Search | Example Store",
+  title: `Search | ${BRAND.name}`,
 };
 
 // sending api request for search results for a given search text

@@ -1,10 +1,10 @@
 // app/about-us/page.jsx
 import { AboutUsComponent } from "@/components";
+import { BRAND } from "@/config/brand";
 
 export const metadata = {
-  title: "About Us | Example Store",
-  description:
-    "Learn about Example Store, a modern e-commerce boilerplate built for fast customization.",
+  title: `About Us | ${BRAND.name}`,
+  description: `Learn about ${BRAND.name}, ${BRAND.tagline.toLowerCase()} for the modern wardrobe.`,
 };
 
 export default function AboutUsPage() {

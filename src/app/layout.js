@@ -4,16 +4,16 @@ import AuthProvider from "@/provider/SessionProvider";
 import { getServerSession } from "next-auth";
 import Providers from "@/provider/Providers";
 import CartHydrator from "@/provider/CartHydrator";
+import { BRAND } from "@/config/brand";
 import "keen-slider/keen-slider.min.css";
 
 export const metadata = {
-  metadataBase: new URL("https://example.com/"),
+  metadataBase: new URL(BRAND.siteUrl),
   title: {
-    default: "Example Store — Modern E-commerce Boilerplate",
-    template: "%s | Example Store",
+    default: `${BRAND.name} — ${BRAND.tagline}`,
+    template: `%s | ${BRAND.name}`,
   },
-  description:
-    "Launch a modern, customizable online storefront with this e-commerce boilerplate.",
+  description: BRAND.description,
   icons: {
     icon: "/favicon.ico",
   },
@@ -23,11 +23,10 @@ export const metadata = {
   },
   openGraph: {
     type: "website",
-    url: "https://example.com/",
-    siteName: "Example Store",
-    title: "Example Store — Modern E-commerce Boilerplate",
-    description:
-      "A clean starter template for online shops, ready for your own branding.",
+    url: BRAND.siteUrl,
+    siteName: BRAND.name,
+    title: `${BRAND.name} — ${BRAND.tagline}`,
+    description: BRAND.description,
   },
 };
 
