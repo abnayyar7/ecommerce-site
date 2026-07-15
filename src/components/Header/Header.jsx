@@ -10,6 +10,7 @@ import { signOut, useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { useWishlistStore } from "@/app/_zustand/wishlistStore";
 import { siteTheme } from "@/config/theme";
+import { BRAND } from "@/config/brand";
 import "./header.css";
 
 function Header({ categoryMenuSlot }) {
@@ -176,10 +177,11 @@ function Header({ categoryMenuSlot }) {
             <Link href="/">
               <Image
                 src="/logo-inverted.png"
-                alt="Logo"
-                width={200}
-                height={100}
-                className="object-none"
+                alt={BRAND.name}
+                width={413}
+                height={289}
+                className="h-12 w-auto md:h-14"
+                priority
               />
             </Link>
           </div>

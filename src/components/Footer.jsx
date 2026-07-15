@@ -17,17 +17,14 @@ export default async function SiteFooter() {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:justify-between gap-10 md:gap-0 items-center md:items-start text-center md:text-left">
         {/* Velaura brand & brief */}
         <div className="mb-8 md:mb-0 flex-1 min-w-[230px] flex flex-col items-center text-center mx-auto md:items-start md:text-left md:mx-0">
-          <Link href="/" className="flex items-center gap-3 mb-4">
+          <Link href="/" className="flex items-center mb-4">
             <Image
               src="/logo-inverted.png"
-              alt="Logo"
-              width={60}
-              height={60}
-              className="object-none"
+              alt={BRAND.name}
+              width={413}
+              height={289}
+              className="h-16 w-auto"
             />
-            <span className="text-2xl tracking-wider">
-              <span className="font-bold">{BRAND.name}</span>
-            </span>
           </Link>
           <p className="text-white/80 mb-2 max-w-[300px]">{BRAND.description}</p>
           <div className="flex flex-col gap-1 text-white/70 text-sm mt-3 md:items-start items-center">

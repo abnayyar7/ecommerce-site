@@ -51,7 +51,7 @@ export async function POST(request) {
                 <a href="${process.env.NEXT_BASE_URL_FULL}" target="_blank">
                   <img src="${
                     process.env.NEXT_BASE_URL_FULL
-                  }/logo-header.png" alt="${BRAND.name}" style="width:84px;height:84px;border-radius:24px;display:block;border:2px solid #1a3c40;">
+                  }/logo-header.png" alt="${BRAND.name}" style="width:119px;height:84px;display:block;">
                 </a>
               </td>
             </tr>
