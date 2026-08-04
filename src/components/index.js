@@ -1,5 +1,3 @@
-export { default as HeroBanner } from "./HeroBanner";
-export { default as IntroducingSection } from "./IntroducingSection";
 export { default as CategoryItem } from "./CategoryItem";
 export { default as CategoryMenuOld } from "./CategoryMenu-Old";
 export { default as Heading } from "./Heading";
