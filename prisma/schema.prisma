@@ -170,24 +170,24 @@ model OrderItem {
  */
 
 model Payment {
-  id                String    @id @default(cuid())
-  orderId           String    @unique
-  method            String
-  mode              String?
-  status            String    @default("initiated")
-  amount            Int
-  gatewayId         String?
-  gatewayOrderId    String?
-  responseCode      String?
-  responseMessage   String?
-  payerAddress      String?
-  payerName         String?
-  pgRefNum          String?
-  rrn               String?
-  qrString          String?
-  rawResponse       Json?
-  processedAt       DateTime?
-  retryCount        Int       @default(0)
+  id              String    @id @default(cuid())
+  orderId         String    @unique
+  method          String
+  mode            String?
+  status          String    @default("initiated")
+  amount          Int
+  gatewayId       String?
+  gatewayOrderId  String?
+  responseCode    String?
+  responseMessage String?
+  payerAddress    String?
+  payerName       String?
+  pgRefNum        String?
+  rrn             String?
+  qrString        String?
+  rawResponse     Json?
+  processedAt     DateTime?
+  retryCount      Int       @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -213,8 +213,8 @@ model PaymentAttempt {
 /**
  * -------------------- CART --------------------
  * Ownership invariant (enforced in service layer):
- *   Active carts have EXACTLY ONE of userId or guestTokenHash.
- *   Never both. Never neither (for active carts).
+ * Active carts have EXACTLY ONE of userId or guestTokenHash.
+ * Never both. Never neither (for active carts).
  */
 
 model Cart {
@@ -257,7 +257,7 @@ model MergeLedger {
   guestCartVersion Int
   resultCartId     String
   resultVersion    Int
-  warnings         Json?    // Array of { code, productId, selectedSize }
+  warnings         Json? // Array of { code, productId, selectedSize }
   createdAt        DateTime @default(now())
 
   @@unique([userId, guestTokenHash, guestCartVersion])

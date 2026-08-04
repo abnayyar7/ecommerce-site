@@ -11,3 +11,18 @@ tmp
 order.json
 orderArray.txt
 logs
+fal.key
+public/images/men
+public/homepage.zip
+
+# --- Disposable product-image generation pipeline ---
+# Standalone tooling for generating catalog photography. Not part of the
+# running app: nothing under src/app or src/components imports any of it.
+# The PDP gallery route (src/app/api/images/**), products.json and the
+# catalog seeder are CORE and deliberately NOT listed here.
+render.mjs
+run-batch.mjs
+src/scripts/generate-images.js
+src/scripts/generateImagePrompts.js
+src/scripts/product-image-prompts.json
+src/scripts/product-image-manifest.json
