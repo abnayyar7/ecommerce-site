@@ -19,6 +19,7 @@ model Product {
   price          Float
   rating         Int
   manufacturer   String
+  colour         String?
   categoryId     String
   subCategoryId  String
   mainImage      String

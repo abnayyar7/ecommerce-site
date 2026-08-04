@@ -45,6 +45,15 @@ const ProductDetails = ({ product, selectedSize, onChangeSize }) => {
         ₹{product.price}
       </p>
 
+      {product.colour && (
+        <p className="text-sm text-gray-600">
+          <span className="font-medium text-[var(--color-inverted-text)]">
+            Colour:
+          </span>{" "}
+          <span className="capitalize">{product.colour}</span>
+        </p>
+      )}
+
       <StockAvailabillity stock={product.inStock} />
 
       {/* Key Features (your schema has Json?; if it is an array, this works) */}
