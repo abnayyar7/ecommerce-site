@@ -9,7 +9,6 @@ export const BRAND = {
   phone: "+91 22 4890 1234",
   phoneHref: "tel:+912248901234",
   address: {
-    line1: "Velaura House, 14 Turner Road",
     line2: "Bandra West, Mumbai",
     state: "Maharashtra",
     pincode: "400050",
