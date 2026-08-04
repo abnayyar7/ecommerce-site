@@ -177,7 +177,7 @@ export default function PrivacyPolicyPage() {
             <li>Phone: {BRAND.phone}</li>
             <li>
               Address: {BRAND.address.line2}, {BRAND.address.state}{" "}
-              {BRAND.address.pincode}
+              {BRAND.address.pincode}, {BRAND.address.country}
             </li>
           </ul>
         </section>
