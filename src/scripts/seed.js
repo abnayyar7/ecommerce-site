@@ -1,15 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
-
-async function main() {
-  await prisma.product.createMany({
-    data: [
-      { name: "Classic T-Shirt", price: 499, imageUrl: "/shirt1.jpg" },
-      { name: "Denim Jeans", price: 999, imageUrl: "/jeans1.jpg" },
-      { name: "Winter Jacket", price: 1999, imageUrl: "/jacket1.jpg" },
-    ],
-  });
-  console.log("Seeded products");
-}
-
-main().finally(() => prisma.$disconnect());
+// The catalog seeder lives in insertDemoData.js — it reads products.json and
+// upserts categories, subcategories and products against the live schema.
+// This file used to hold a throwaway sample seed that no longer matched the
+// Product model; it now just forwards to the real one.
+import "./insertDemoData.js";
