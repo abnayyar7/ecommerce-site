@@ -1,7 +1,7 @@
 export const HeroCarouselImages = [
   {
-    image: "/homepage/kids.png", // Required - desktop image (and fallback if mobile missing)
-    imageMobile: "/homepage/kids-mobile.png", // Optional - mobile image
+    image: "/homepage/kids.jpg", // Required - desktop image (and fallback if mobile missing)
+    imageMobile: "/homepage/kids-mobile.jpg", // Optional - mobile image
     headline: "Tiny Trends, Big Style", // New headline
     description: "Playful, comfy looks for your little ones.", // New description
     cta: {
@@ -10,8 +10,8 @@ export const HeroCarouselImages = [
     },
   },
   {
-    image: "/homepage/men.png",
-    imageMobile: "/homepage/men-mobile.png",
+    image: "/homepage/men.jpg",
+    imageMobile: "/homepage/men-mobile.jpg",
     headline: "Men's Wear, Elevated", // Updated headline
     description:
       "Sharp, stylish, and always on point. Discover the latest in men's fashion.", // Updated description
@@ -21,8 +21,8 @@ export const HeroCarouselImages = [
     },
   },
   {
-    image: "/homepage/women.png",
-    imageMobile: "/homepage/women-mobile.png",
+    image: "/homepage/women.jpg",
+    imageMobile: "/homepage/women-mobile.jpg",
     headline: "Chic & Timeless", // New headline
     description: "Discover the season's must-haves for every woman.", // New description
     cta: {
@@ -31,8 +31,8 @@ export const HeroCarouselImages = [
     },
   },
   {
-    image: "/homepage/accessories.png",
-    imageMobile: "/homepage/accessories-mobile.png",
+    image: "/homepage/accessories.jpg",
+    imageMobile: "/homepage/accessories-mobile.jpg",
     headline: "Complete Your Look", // New headline
     description: "From bold to classic, find the perfect accessories.", // New description
     cta: {
