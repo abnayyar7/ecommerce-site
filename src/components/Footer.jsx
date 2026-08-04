@@ -120,11 +120,6 @@ export default async function SiteFooter() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/orders" className="hover:underline">
-                    My Orders
-                  </Link>
-                </li>
-                <li>
                   <Link href="/profile" className="hover:underline">
                     My Account
                   </Link>

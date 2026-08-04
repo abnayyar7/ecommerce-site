@@ -14,9 +14,9 @@ export default function ContactUsComponent() {
     company: BRAND.legalName,
     email: BRAND.email,
     phone: BRAND.phone,
-    address: `${BRAND.address.line1}, ${BRAND.address.line2}, ${BRAND.address.state} ${BRAND.address.pincode}`,
-    mapUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(BRAND.address.mapsQuery)}`,
-    mapEmbedUrl: `https://maps.google.com/maps?q=${encodeURIComponent(BRAND.address.mapsQuery)}&output=embed`,
+    // Area-level only, and not geocoded: this is a demo brand, so a street
+    // address would resolve to a real building that has nothing to do with it.
+    address: `${BRAND.address.line2}, ${BRAND.address.state} ${BRAND.address.pincode}`,
   };
 
   return (
@@ -34,9 +34,8 @@ export default function ContactUsComponent() {
           </p>
         </section>
 
-        {/* Main 2-Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-          {/* Left Column: Company Info */}
+        {/* Company Info */}
+        <div className="max-w-2xl">
           <div className="space-y-8">
             <div className="bg-gradient-to-br from-[var(--color-bg)] to-[#1a1245] rounded-2xl p-8 md:p-10 text-white shadow-lg">
               {/* Company Header */}
@@ -94,17 +93,9 @@ export default function ContactUsComponent() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-white mb-1">Address</h3>
-                    <a
-                      href={contactInfo.mapUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white/80 hover:text-[var(--secondary-color)] transition-colors duration-300 leading-relaxed underline hover:no-underline"
-                    >
+                    <address className="text-white/80 leading-relaxed not-italic">
                       {contactInfo.address}
-                    </a>
-                    <p className="text-white/60 text-sm mt-2">
-                      Click to view on Google Maps
-                    </p>
+                    </address>
                   </div>
                 </div>
               </div>
@@ -134,44 +125,6 @@ export default function ContactUsComponent() {
             </div>
           </div>
 
-          {/* Right Column: Google Maps */}
-          <div className="space-y-8">
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden h-full">
-              <div className="relative w-full h-[500px] lg:h-[600px]">
-                <iframe
-                  title="Store Location"
-                  className="w-full h-full border-none"
-                  style={{
-                    filter: "contrast(1.1) brightness(0.9) invert(0.02)",
-                  }}
-                  src={contactInfo.mapEmbedUrl}
-                  allowFullScreen=""
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              </div>
-
-              {/* Map Info Card */}
-              <div className="p-6 md:p-8 bg-gradient-to-br from-gray-50 to-white border-t border-gray-100">
-                <h3 className="text-lg font-semibold text-[var(--color-inverted-text)] mb-3">
-                  Our Office Location
-                </h3>
-                <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                  Visit our office headquarters in {BRAND.address.line2}. Our
-                  team is here to assist with any inquiries or collaborations.
-                  Use the map to find exact directions.
-                </p>
-                <a
-                  href={contactInfo.mapUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block mt-4 px-6 py-3 bg-[var(--secondary-color)] text-white font-semibold rounded-lg hover:bg-[var(--secondary-color)]/90 transition-all duration-300 transform hover:scale-105"
-                >
-                  Open in Google Maps
-                </a>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* FAQ Section (Optional) */}
