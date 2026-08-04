@@ -15,7 +15,6 @@ export { default as PromoStrip } from "./HomePageComponents/PromoStrip";
 export { default as CategoryShowcase } from "./HomePageComponents/CategoryShowcase";
 export { default as FeaturedProduct } from "./HomePageComponents/FeaturedProduct";
 export { default as Newsletter } from "./HomePageComponents/Newsletter";
-export { default as MagicDiscountBanner } from "./HomePageComponents/MagicDiscountBanner";
 
 // Shop components export file
 export { default as Filters } from "./Filters";
