@@ -37,20 +37,13 @@ export default async function SiteFooter() {
                 <a href={BRAND.phoneHref}>{BRAND.phone}</a>
               </p>
             </span>
-            <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(BRAND.address.mapsQuery)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-start gap-2 hover:text-white transition-colors text-center md:text-left"
-            >
-              <address className="flex items-center gap-2 not-italic">
-                <MapPin className="w-4 h-4" /> {BRAND.address.line1}
-                <br />
-                {BRAND.address.line2}
-                <br />
-                {BRAND.address.state} {BRAND.address.pincode}
-              </address>
-            </a>
+            {/* Area-level and unlinked: a street address on a demo brand would
+                pin a real building that has nothing to do with it. */}
+            <address className="flex items-center gap-2 not-italic text-center md:text-left">
+              <MapPin className="w-4 h-4 flex-shrink-0" />
+              {BRAND.address.line2}, {BRAND.address.state}{" "}
+              {BRAND.address.pincode}
+            </address>
           </div>
         </div>
 

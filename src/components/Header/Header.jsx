@@ -242,14 +242,6 @@ function Header({ categoryMenuSlot }) {
                     </Link>
 
                     <Link
-                      href="/orders"
-                      className="block rounded px-3 py-2 transition hover:bg-[var(--color-bg)] hover:text-[var(--color-text)]"
-                      onClick={() => setProfileOpen(false)}
-                    >
-                      Orders
-                    </Link>
-
-                    <Link
                       href="/wishlist"
                       className="group/wishlist relative block rounded px-3 py-2 transition hover:bg-[var(--color-bg)] hover:text-[var(--color-text)]"
                       onClick={() => setProfileOpen(false)}

@@ -88,13 +88,14 @@ export default function AboutUsComponent() {
         {/* Contact Section */}
         <section className="space-y-6">
           <h2 className="text-2xl font-semibold text-gray-800">Contact Us</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Left: Contact Details */}
+          <div className="max-w-xl">
+            {/* Contact Details */}
             <div className="space-y-3 text-gray-700">
               <p>
-                <strong>Address:</strong> {BRAND.address.line1},{" "}
-                {BRAND.address.line2}, {BRAND.address.state}{" "}
-                {BRAND.address.pincode}
+                {/* Area-level only — see Footer/Contact: no street address, no
+                    map pin, because the brand is fictional. */}
+                <strong>Address:</strong> {BRAND.address.line2},{" "}
+                {BRAND.address.state} {BRAND.address.pincode}
               </p>
               <p>
                 <strong>Email:</strong>{" "}
@@ -113,18 +114,6 @@ export default function AboutUsComponent() {
               </p>
             </div>
 
-            {/* Right: Embedded Google Map */}
-            <div className="rounded-xl overflow-hidden shadow-sm border border-gray-200">
-              <iframe
-                title="Store Location"
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(BRAND.address.mapsQuery)}&output=embed`}
-                width="100%"
-                height="250"
-                style={{ border: 0 }}
-                allowFullScreen=""
-                loading="lazy"
-              ></iframe>
-            </div>
           </div>
         </section>
       </div>

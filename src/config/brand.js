@@ -14,7 +14,6 @@ export const BRAND = {
     state: "Maharashtra",
     pincode: "400050",
     country: "India",
-    mapsQuery: "Turner Road, Bandra West, Mumbai",
   },
   jurisdiction: "Mumbai, Maharashtra, India",
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://velauraecom.vercel.app",
