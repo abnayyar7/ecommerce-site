@@ -1,10 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/scripts/authOptions";
-import { PrismaClient } from "@prisma/client";
 import { getCartTotal } from "@/lib/cart";
-import { applyCouponRule } from "@/lib/couponRules";
-
-const prisma = new PrismaClient();
+import { validateCoupon, COUPON_MESSAGES } from "@/lib/couponValidation";
 
 export async function POST(req) {
   try {
@@ -16,40 +13,32 @@ export async function POST(req) {
     const { couponCode } = await req.json();
     if (!couponCode) {
       return Response.json(
-        { success: false, message: "Coupon code required" },
-        { status: 400 }
-      );
-    }
-
-    const normalizedCode = couponCode.trim().toUpperCase();
-
-    // 🔑 Fetch coupon from DB
-    const coupon = await prisma.coupon.findUnique({
-      where: { code: normalizedCode },
-    });
-
-    if (!coupon || !coupon.isActive) {
-      return Response.json(
-        { success: false, message: "Invalid coupon code" },
+        { success: false, message: COUPON_MESSAGES.CODE_REQUIRED },
         { status: 400 }
       );
     }
 
     // 🔑 Get authoritative cart total
     const cartTotal = await getCartTotal(session.user.id);
-    // 🎯 Apply rule from code
-    const result = applyCouponRule(coupon.ruleType, cartTotal);
+
+    // 🎯 Exactly the validation checkout runs — code normalization, usage caps
+    // and the rule itself — so the cart and checkout cannot disagree.
+    const result = await validateCoupon({
+      code: couponCode,
+      userId: session.user.id,
+      cartTotal,
+    });
 
     if (!result.valid) {
       return Response.json(
-        { success: false, message: "Coupon cannot be applied" },
+        { success: false, reason: result.reason, message: result.message },
         { status: 400 }
       );
     }
 
     return Response.json({
       success: true,
-      couponCode: coupon.code,
+      couponCode: result.coupon.code,
       originalAmount: cartTotal,
       discountAmount: result.discountAmount,
       finalAmount: result.finalAmount,

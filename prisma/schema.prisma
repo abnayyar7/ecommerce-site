@@ -372,21 +372,35 @@ model Coupon {
   maxUses   Int? // optional global cap
   usedCount Int  @default(0)
 
+  // Defaults to false so existing codes stay unlimited per customer.
+  oncePerCustomer Boolean @default(false)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   orders Order[]
+  usages CouponUsage[]
 }
 
 model CouponUsage {
-  id     String   @id @default(cuid())
-  userId String
-  coupon String
-  usedAt DateTime @default(now())
+  id       String   @id @default(cuid())
+  userId   String
+  coupon   String // code snapshot, kept for readability
+  couponId String?
+  orderId  String?
+  usedAt   DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id])
+  user      User    @relation(fields: [userId], references: [id])
+  couponRef Coupon? @relation(fields: [couponId], references: [id])
 
-  @@unique([userId, coupon])
+  // One usage row per coupon per order. This is the idempotency key: retrying
+  // an order (the order write is an upsert on a client-supplied id) can never
+  // record a second usage or double-increment usedCount.
+  //
+  // Replaces a previous @@unique([userId, coupon]), which would have blocked a
+  // customer from legitimately reusing a coupon that is not oncePerCustomer.
+  @@unique([couponId, orderId])
+  @@index([userId, couponId])
 }
 
 /**

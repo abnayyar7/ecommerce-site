@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import { randomUUID } from "crypto";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/scripts/authOptions";
-import { applyCouponRule } from "@/lib/couponRules";
+import { validateCoupon, recordCouponUsage } from "@/lib/couponValidation";
 import { shippingCharges } from "@/helper/common";
 
 function isEnvFlagEnabled(value) {
@@ -84,23 +84,31 @@ export async function POST(req) {
 
     let discountAmount = 0;
     let finalAmount = originalAmount;
+    let appliedCoupon = null;
     let appliedCouponId = null;
     let appliedCouponCode = null;
 
     if (couponCode) {
-      const coupon = await prisma.coupon.findUnique({
-        where: { code: couponCode },
+      // Same validator the cart step uses, so a code accepted there is
+      // accepted here. It normalizes case internally — the raw string was
+      // previously looked up here, so "welcome2026" silently lost its discount
+      // between cart and checkout.
+      //
+      // excludeOrderId keeps a retry of THIS order from tripping its own
+      // already-recorded usage and dropping the discount.
+      const result = await validateCoupon({
+        code: couponCode,
+        userId,
+        cartTotal: originalAmount,
+        excludeOrderId: finalOrderId,
       });
 
-      if (coupon && coupon.isActive) {
-        const result = applyCouponRule(coupon.ruleType, originalAmount);
-
-        if (result.valid) {
-          discountAmount = result.discountAmount;
-          finalAmount = result.finalAmount;
-          appliedCouponId = coupon.id;
-          appliedCouponCode = coupon.code;
-        }
+      if (result.valid) {
+        discountAmount = result.discountAmount;
+        finalAmount = result.finalAmount;
+        appliedCoupon = result.coupon;
+        appliedCouponId = result.coupon.id;
+        appliedCouponCode = result.coupon.code;
       }
     }
 
@@ -171,7 +179,10 @@ export async function POST(req) {
 
     /* ------------------ UPSERT ORDER ------------------ */
 
-    const order = await prisma.order.upsert({
+    // The order write and the coupon usage record share one transaction: a
+    // failed order can never record usage, and a successful one always does.
+    const order = await prisma.$transaction(async (tx) => {
+      const saved = await tx.order.upsert({
       where: { id: finalOrderId },
 
       update: {
@@ -225,6 +236,17 @@ export async function POST(req) {
         products: true,
         address: true,
       },
+      });
+
+      if (appliedCoupon) {
+        await recordCouponUsage(tx, {
+          coupon: appliedCoupon,
+          userId,
+          orderId: saved.id,
+        });
+      }
+
+      return saved;
     });
 
     return NextResponse.json({
