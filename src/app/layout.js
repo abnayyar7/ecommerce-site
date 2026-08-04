@@ -29,6 +29,12 @@ export const metadata = {
     title: `${BRAND.name} — ${BRAND.tagline}`,
     description: BRAND.description,
   },
+  // Inherited by every route; the PDP overrides it with per-product tags.
+  twitter: {
+    card: "summary_large_image",
+    title: `${BRAND.name} — ${BRAND.tagline}`,
+    description: BRAND.description,
+  },
 };
 
 export default async function RootLayout({ children }) {

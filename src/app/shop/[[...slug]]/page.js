@@ -6,10 +6,39 @@ import {
   SortBy,
 } from "@/components";
 import React from "react";
+import { getCategoriesCached } from "@/helper/Catalog";
+import { collectionDescription } from "@/lib/seo";
 
-export const metadata = {
-  title: "Shop",
-};
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const segments = Array.isArray(slug) ? slug : [];
+
+  // The first segment, when it names a real category, drives the title —
+  // otherwise every /shop/* URL rendered as a bare "Shop".
+  const categories = await getCategoriesCached();
+  const category = segments[0]
+    ? categories.find((c) => c.slug === segments[0])
+    : null;
+
+  const title = category ? category.name : "Shop";
+  const description = collectionDescription(
+    category ? category.name : "the full collection"
+  );
+  const path = segments.length > 0 ? `/shop/${segments.join("/")}` : "/shop";
+
+  return {
+    // Bare title — layout.js appends "| Velaura" via its template.
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      url: path,
+    },
+  };
+}
 
 // improve readabillity of category text, for example category text "smart-watches" will be "smart watches"
 const improveCategoryText = (text) => {

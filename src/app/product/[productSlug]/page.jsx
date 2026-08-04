@@ -6,22 +6,45 @@ import {
   PDPClient,
 } from "@/components";
 import { getBaseURL } from "@/config/config";
+import { getProductBySlug } from "@/lib/getProduct";
+import {
+  truncate,
+  productImagePath,
+  FALLBACK_METADATA,
+} from "@/lib/seo";
 import { notFound } from "next/navigation";
 import React from "react";
 
-async function fetchProduct(slug) {
-  try {
-    const baseURL = await getBaseURL();
-    const res = await fetch(`${baseURL}/api/slugs/${slug}`, {
-      cache: "no-store",
-    });
-    if (!res.ok) return null;
-    const product = await res.json();
-    return product;
-  } catch (error) {
-    console.error("Fetch error:", error);
-    return null;
-  }
+export async function generateMetadata({ params }) {
+  const { productSlug } = await params;
+  // Same cached helper the page uses, so this costs no extra query.
+  const product = await getProductBySlug(productSlug);
+
+  if (!product) return FALLBACK_METADATA;
+
+  const path = `/product/${product.slug}`;
+  const description = truncate(product.description);
+  const image = productImagePath(product.mainImage);
+
+  return {
+    // Bare title — layout.js appends "| Velaura" via its template.
+    title: product.title,
+    description,
+    alternates: { canonical: path },
+    openGraph: {
+      title: product.title,
+      description,
+      type: "website",
+      url: path,
+      images: [image],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.title,
+      description,
+      images: [image],
+    },
+  };
 }
 
 async function fetchImages(productID) {
@@ -41,9 +64,9 @@ async function fetchImages(productID) {
 
 const SingleProductPage = async ({ params }) => {
   const { productSlug } = await params;
-  const product = await fetchProduct(productSlug);
+  const product = await getProductBySlug(productSlug);
 
-  if (!product || product.error) {
+  if (!product) {
     notFound();
   }
 
