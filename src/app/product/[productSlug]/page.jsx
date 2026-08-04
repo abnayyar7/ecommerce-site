@@ -42,11 +42,12 @@ async function fetchImages(productID) {
 const SingleProductPage = async ({ params }) => {
   const { productSlug } = await params;
   const product = await fetchProduct(productSlug);
-  const images = await fetchImages(product?.id);
 
   if (!product || product.error) {
     notFound();
   }
+
+  const images = await fetchImages(product.id);
 
   return (
     <div className="bg-[var(--color-inverted-bg)] text-[var(--color-inverted-text)]">

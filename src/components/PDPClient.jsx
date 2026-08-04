@@ -23,7 +23,11 @@ export default function PDPClient({ product, images }) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
-      <PDPProductImages mainImage={product.mainImage} images={images} />
+      <PDPProductImages
+        mainImage={product.mainImage}
+        images={images}
+        title={product.title}
+      />
 
       <ProductDetails
         product={product}

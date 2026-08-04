@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 
 export async function getBaseURL() {
-  const headersList = headers();
+  const headersList = await headers();
   // Hardcoded protocol to 'http' for local development to avoid SSL errors
   const protocol = "http";
   const host = headersList.get("host");
