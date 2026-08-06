@@ -107,14 +107,14 @@ export default function ShippingDeliveryPolicyPage() {
           </ul>
 
           <h2 className="text-xl font-semibold text-gray-800">
-            5. Order Tracking
+            5. Order Updates
           </h2>
           <p>
-            Once your order has been dispatched, you will receive an email
-            and/or SMS with your tracking number and a direct link to track your
-            shipment. You can also track your order anytime from your account
-            dashboard under
-            <strong> “My Orders.”</strong>
+            When you place an order, we send an order confirmation email to the
+            address you provided at checkout, setting out your items, delivery
+            address and order total. If we need to reach you about your
+            delivery, we will use the email address or phone number on the
+            order.
           </p>
 
           <h2 className="text-xl font-semibold text-gray-800">

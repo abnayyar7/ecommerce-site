@@ -111,13 +111,10 @@ export default function RefundReturnPolicyPage() {
             from the date of inspection.
           </p>
           <p>
-            - <strong>Refunds for Prepaid Orders:</strong> Refunds will be
-            issued to the original payment method. For online payments, refunds
-            are processed through the gateway and may take 5–10 business days to
-            reflect depending on your bank or payment provider.
-            <br />- <strong>Refunds for COD Orders:</strong> COD refunds will be
-            issued via bank transfer. Please provide your bank details when
-            requesting the refund.
+            Once a return is approved, we will contact you by email to confirm
+            the outcome and agree how any refund will be made. Refund methods
+            and timelines depend on how the order was originally placed, and we
+            will confirm both with you before processing.
           </p>
 
           <h2 className="text-xl font-semibold text-gray-800">7. Exchanges</h2>
