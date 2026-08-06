@@ -6,8 +6,6 @@ import {
   SingleProductRating,
   SingleProductDynamicFields,
   AddToWishlistBtn,
-  AddToCartSingleProductBtn,
-  BuyNowSingleProductBtn,
   SizeComparison,
 } from "@/components";
 
@@ -17,20 +15,6 @@ const ProductDetails = ({ product, selectedSize, onChangeSize }) => {
     () => parseSizes(product.availableSizes),
     [product.availableSizes]
   );
-
-  const [quantity, setQuantity] = useState(1);
-  const maxQty = product.inStock > 10 ? 10 : Math.max(0, product.inStock);
-
-  const incrementQty = () => {
-    if (quantity < maxQty) setQuantity(quantity + 1);
-  };
-  const decrementQty = () => {
-    if (quantity > 1) setQuantity(quantity - 1);
-  };
-
-  // if product has sizes, require a selection; if it has no sizes configured, allow purchase as-is
-  const requiresSize = sizes.length > 0;
-  const canBuy = product.inStock > 0 && (!requiresSize || !!selectedSize);
 
   const [showChart, setShowChart] = useState(false);
 
@@ -122,22 +106,6 @@ const ProductDetails = ({ product, selectedSize, onChangeSize }) => {
         product={product}
         selectedSize={selectedSize || null}
       />
-
-      {/* Actions */}
-      {/* <div className="flex gap-3 w-full max-w-sm">
-        <AddToCartSingleProductBtn
-          product={product}
-          quantity={quantity}
-          selectedSize={selectedSize || null} // carry size to server/cart
-          disabled={!canBuy}
-        />
-        <BuyNowSingleProductBtn
-          product={product}
-          quantity={quantity}
-          selectedSize={selectedSize || null}
-          disabled={!canBuy}
-        />
-      </div> */}
 
       {/* Wishlist unchanged */}
       <AddToWishlistBtn product={product} />

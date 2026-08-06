@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { createHash, timingSafeEqual } from "crypto";
+import { createHash } from "crypto";
 import { cookies } from "next/headers";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/scripts/authOptions";
@@ -18,16 +18,6 @@ const GUEST_COOKIE_MAX_AGE = 30 * 24 * 60 * 60; // 30 days in seconds
  */
 export function hashGuestToken(rawToken) {
   return createHash("sha256").update(rawToken).digest("hex");
-}
-
-/**
- * Constant-time comparison of two hex-encoded hashes.
- */
-export function safeCompareHashes(a, b) {
-  if (typeof a !== "string" || typeof b !== "string" || a.length !== b.length) {
-    return false;
-  }
-  return timingSafeEqual(Buffer.from(a, "hex"), Buffer.from(b, "hex"));
 }
 
 // ---------------------------------------------------------------------------
@@ -229,22 +219,6 @@ export async function getOrCreateCartByOwner(owner) {
 // ---------------------------------------------------------------------------
 // Optimistic version check
 // ---------------------------------------------------------------------------
-
-/**
- * Verify the supplied version matches the current cart version.
- * Returns { ok: true } or { ok: false, currentVersion }.
- */
-export async function checkVersion(cartId, expectedVersion) {
-  const cart = await prisma.cart.findUnique({
-    where: { id: cartId },
-    select: { version: true },
-  });
-  if (!cart) return { ok: false, currentVersion: null };
-  if (cart.version !== expectedVersion) {
-    return { ok: false, currentVersion: cart.version };
-  }
-  return { ok: true };
-}
 
 /**
  * Bump version + lastActivityAt on a cart.

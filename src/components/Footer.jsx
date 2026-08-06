@@ -8,7 +8,6 @@ import { getCategoriesCached } from "@/helper/Catalog";
 import { BRAND } from "@/config/brand";
 
 export default async function SiteFooter() {
-  // const { data: session, status } = useSession();
   const session = await getServerSession(authOptions);
   const isLoggedIn = !!session?.user;
   const [categories] = await Promise.all([getCategoriesCached()]);
@@ -119,16 +118,6 @@ export default async function SiteFooter() {
                 </li>
               </>
             )}
-            {/* <li>
-              <Link href="/help" className="hover:underline">
-                Help / Support
-              </Link>
-            </li>
-            <li>
-              <Link href="/faq" className="hover:underline">
-                FAQs
-              </Link>
-            </li> */}
           </ul>
         </div>
 
@@ -140,13 +129,6 @@ export default async function SiteFooter() {
       <div className="border-t border-white/20 mt-10 pt-5 text-center text-white/70 text-sm tracking-wide">
         &copy; {new Date().getFullYear()} {BRAND.legalName}. All rights
         reserved.
-        {/* <Link href="/terms" className="hover:underline">
-          Terms
-        </Link>
-        <span className="mx-2">|</span>
-        <Link href="/privacy" className="hover:underline">
-          Privacy
-        </Link> */}
       </div>
     </footer>
   );

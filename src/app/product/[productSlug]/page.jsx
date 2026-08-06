@@ -1,10 +1,4 @@
-import {
-  ProductTabs,
-  Breadcrumb,
-  PDPProductImages,
-  ProductDetails,
-  PDPClient,
-} from "@/components";
+import { Breadcrumb, PDPClient } from "@/components";
 import { getProductBySlug, getProductImages } from "@/lib/getProduct";
 import {
   truncate,

@@ -16,20 +16,6 @@ export const getSubCategoriesCached = unstable_cache(
   { revalidate: 60 * 60 * 24, tags: ["subcategories"] } // 24h + tag
 );
 
-// ---- FEATURED PRODUCTS ----
-export const getFeaturedProductsCached = (limit = 12) =>
-  unstable_cache(
-    async () =>
-      prisma.product.findMany({
-        where: { isFeatured: true }, // adjust to your schema
-        orderBy: { createdAt: "desc" },
-        take: limit,
-        include: { images: true }, // optional
-      }),
-    [`products:featured:v1:limit=${limit}`],
-    { revalidate: 60 * 30, tags: ["products:featured"] } // 30m
-  )();
-
 // ---- SALE PRODUCTS ----
 // If you use discountPercent:
 // export const getSaleProductsCached = (limit = 12) =>

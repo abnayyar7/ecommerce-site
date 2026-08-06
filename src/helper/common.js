@@ -28,19 +28,3 @@ export function shippingCharges(state, subtotal) {
   }
 }
 
-export const detectPaymentMethod = {
-  QR: "UPI",
-  CC: "Credit Card",
-};
-
-export const sortedPayload = (payload) => {
-  return payload.sort(([a], [b]) => {
-    if (a.startsWith(b)) return -1;
-    // If 'b' starts with 'a' (e.g. b="ABCDE", a="ABC"), 'b' comes first
-    if (b.startsWith(a)) return 1;
-    // Otherwise alphabetical fallback
-    if (a < b) return -1;
-    if (a > b) return 1;
-    return 0;
-  });
-};
