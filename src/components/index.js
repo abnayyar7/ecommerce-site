@@ -1,4 +1,3 @@
-export { default as CategoryItem } from "./CategoryItem";
 export { default as Heading } from "./Heading";
 export { default as ProductItem } from "./ProductItem";
 export { default as ProductsSection } from "./ProductsSection";
