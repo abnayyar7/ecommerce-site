@@ -4,7 +4,7 @@ import { BRAND } from "@/config/brand";
 export const metadata = {
   title: `Shipping & Delivery Policy | ${BRAND.name}`,
   description:
-    "Read our detailed Shipping & Delivery Policy to learn about delivery timelines, shipping charges, order tracking, and international delivery options.",
+    "Read our detailed Shipping & Delivery Policy to learn about delivery timelines, shipping charges, packaging, and international delivery options.",
 };
 
 export default function ShippingDeliveryPolicyPage() {
@@ -23,7 +23,7 @@ export default function ShippingDeliveryPolicyPage() {
             Welcome to <strong>{BRAND.name}</strong>! We aim to provide a
             smooth and reliable shopping experience by ensuring timely delivery
             of your orders. This Shipping &amp; Delivery Policy explains how we
-            handle shipping, delivery times, order tracking, and other related
+            handle shipping, delivery times, charges, and other related
             details.
           </p>
 
@@ -210,14 +210,11 @@ export default function ShippingDeliveryPolicyPage() {
             13. Order Status Updates
           </h2>
           <p>
-            You will receive notifications via email and/or SMS at each stage:
+            When your order is placed, we send an order confirmation email to
+            the address you provided at checkout. If anything about your
+            delivery needs your attention, we will contact you using the email
+            address or phone number on the order.
           </p>
-          <ul className="list-disc list-inside space-y-2">
-            <li>Order Confirmed</li>
-            <li>Order Dispatched</li>
-            <li>Out for Delivery</li>
-            <li>Delivered</li>
-          </ul>
 
           <h2 className="text-xl font-semibold text-gray-800">
             14. Failed Delivery
