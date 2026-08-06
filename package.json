@@ -2,6 +2,8 @@
   "name": "velaura",
   "version": "0.1.0",
   "private": true,
+  "description": "Velaura — a Next.js ecommerce storefront for premium fashion, with Prisma/Postgres, NextAuth, cart and checkout.",
+  "author": "Abhishek Nayyar <abhishek.nayyar93@gmail.com>",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
