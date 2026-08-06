@@ -1,19 +1,9 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import nodemailer from "nodemailer";
 import { BRAND } from "@/config/brand";
+import { sendMail } from "@/lib/mailer";
 
 const prisma = new PrismaClient();
-
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: Number(process.env.EMAIL_PORT),
-  secure: Number(process.env.EMAIL_PORT) === 465, // true for 465, false for other ports
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
 
 export async function POST(request) {
   try {
@@ -33,8 +23,7 @@ export async function POST(request) {
     });
 
     // Send welcome email
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM,
+    await sendMail({
       to: email,
       subject: `Welcome to the ${BRAND.name} Style Club`,
       html: `

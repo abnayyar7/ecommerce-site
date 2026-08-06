@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/scripts/authOptions";
+import { sendMail } from "@/lib/mailer";
+import { buildCodOrderEmail } from "@/lib/orderEmail";
 
 export async function POST(req) {
     const session = await getServerSession(authOptions);
@@ -70,6 +72,33 @@ export async function POST(req) {
                 note: "COD order confirmed",
             },
         });
+
+        // Order confirmation email — BEST EFFORT.
+        //
+        // Everything below this point must not be able to fail the order. The
+        // order and its payment record are already committed; an SMTP outage
+        // is not a reason to tell the customer their order failed, or to have
+        // them retry and place it twice. Failures are logged and swallowed.
+        try {
+            const fullOrder = await prisma.order.findUnique({
+                where: { id: orderId },
+                include: { products: true, address: true, payment: true },
+            });
+
+            if (fullOrder?.email) {
+                const { subject, html } = buildCodOrderEmail(fullOrder);
+                await sendMail({ to: fullOrder.email, subject, html });
+            } else {
+                console.error(
+                    `COD confirmation email skipped for ${orderId}: no email on order`
+                );
+            }
+        } catch (mailErr) {
+            console.error(
+                `COD confirmation email failed for ${orderId}:`,
+                mailErr?.message || mailErr
+            );
+        }
 
         return NextResponse.json({
             success: true,
