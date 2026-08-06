@@ -5,8 +5,7 @@ import {
   ProductDetails,
   PDPClient,
 } from "@/components";
-import { getBaseURL } from "@/config/config";
-import { getProductBySlug } from "@/lib/getProduct";
+import { getProductBySlug, getProductImages } from "@/lib/getProduct";
 import {
   truncate,
   productImagePath,
@@ -47,21 +46,6 @@ export async function generateMetadata({ params }) {
   };
 }
 
-async function fetchImages(productID) {
-  try {
-    const baseURL = await getBaseURL();
-    const res = await fetch(`${baseURL}/api/images/${productID}`, {
-      cache: "no-store",
-    });
-    if (!res.ok) return [];
-    const imageData = await res.json();
-    return imageData;
-  } catch (error) {
-    console.error("Fetch error:", error);
-    return [];
-  }
-}
-
 const SingleProductPage = async ({ params }) => {
   const { productSlug } = await params;
   const product = await getProductBySlug(productSlug);
@@ -70,7 +54,7 @@ const SingleProductPage = async ({ params }) => {
     notFound();
   }
 
-  const images = await fetchImages(product.id);
+  const images = await getProductImages(product.id);
 
   return (
     <div className="bg-[var(--color-inverted-bg)] text-[var(--color-inverted-text)]">
