@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/scripts/authOptions";
+import { waitUntil } from "@vercel/functions";
 import { sendMail } from "@/lib/mailer";
 import { buildCodOrderEmail } from "@/lib/orderEmail";
 
@@ -21,9 +22,17 @@ export async function POST(req) {
             return NextResponse.json({ error: "orderId is required" }, { status: 400 });
         }
 
-        // Verify the order belongs to this user and exists
+        // Verify the order belongs to this user and exists. The include covers
+        // the confirmation email's payload too, so the route reads the order
+        // once rather than fetching it again after the writes below.
+        //
+        // This snapshot predates the status/paymentMethod update further down,
+        // which is fine: the email template reads items, address, totals and
+        // contact details, and states COD from the route it fires in — it never
+        // reads order.status or order.paymentMethod.
         const order = await prisma.order.findUnique({
             where: { id: orderId },
+            include: { products: true, address: true },
         });
 
         if (!order) {
@@ -73,32 +82,35 @@ export async function POST(req) {
             },
         });
 
-        // Order confirmation email — BEST EFFORT.
+        // Order confirmation email — BEST EFFORT, OFF THE RESPONSE PATH.
         //
-        // Everything below this point must not be able to fail the order. The
-        // order and its payment record are already committed; an SMTP outage
-        // is not a reason to tell the customer their order failed, or to have
-        // them retry and place it twice. Failures are logged and swallowed.
-        try {
-            const fullOrder = await prisma.order.findUnique({
-                where: { id: orderId },
-                include: { products: true, address: true, payment: true },
-            });
-
-            if (fullOrder?.email) {
-                const { subject, html } = buildCodOrderEmail(fullOrder);
-                await sendMail({ to: fullOrder.email, subject, html });
-            } else {
-                console.error(
-                    `COD confirmation email skipped for ${orderId}: no email on order`
-                );
-            }
-        } catch (mailErr) {
-            console.error(
-                `COD confirmation email failed for ${orderId}:`,
-                mailErr?.message || mailErr
-            );
-        }
+        // waitUntil hands the send to the platform so the customer gets their
+        // confirmation immediately instead of waiting on SMTP, which runs 5-7s
+        // against Gmail. Plain fire-and-forget would risk the function being
+        // frozen before the send completes; waitUntil keeps it alive.
+        //
+        // The try/catch still matters: the order and payment are already
+        // committed, so an SMTP outage must never surface as a failed order or
+        // prompt a customer to place it twice.
+        waitUntil(
+            (async () => {
+                try {
+                    if (!order.email) {
+                        console.error(
+                            `COD confirmation email skipped for ${orderId}: no email on order`
+                        );
+                        return;
+                    }
+                    const { subject, html } = buildCodOrderEmail(order);
+                    await sendMail({ to: order.email, subject, html });
+                } catch (mailErr) {
+                    console.error(
+                        `COD confirmation email failed for ${orderId}:`,
+                        mailErr?.message || mailErr
+                    );
+                }
+            })()
+        );
 
         return NextResponse.json({
             success: true,
