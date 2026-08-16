@@ -259,7 +259,6 @@ export default function CheckoutAccordion() {
               total={total}
               products={products}
               mode={"checkout"}
-              makePurchase={() => {}}
               state={state}
             />
           </div>

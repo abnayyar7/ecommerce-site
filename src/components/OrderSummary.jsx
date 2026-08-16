@@ -8,7 +8,7 @@ const SHIPPING_ENABLED = ["1", "true", "yes", "on"].includes(
     .trim()
     .toLowerCase(),
 );
-const OrderSummary = ({ total, products, mode, makePurchase, state }) => {
+const OrderSummary = ({ total, products, mode, state }) => {
   const { appliedCoupon, discountAmount, finalAmount } = useCouponStore();
 
   // 🔑 Decide payable subtotal
@@ -73,24 +73,16 @@ const OrderSummary = ({ total, products, mode, makePurchase, state }) => {
           </dl>
         </div>
 
-        {products.length > 0 && (
+        {/* On checkout the accordion owns the CTAs (Proceed -> Save & Continue
+            -> Place COD Order), so the summary is a price breakdown only. */}
+        {mode !== "checkout" && products.length > 0 && (
           <div className="mt-6">
-            {mode === "checkout" ? (
-              <button
-                type="button"
-                onClick={makePurchase}
-                className="w-full rounded-md border border-transparent bg-[color:var(--color-bg)] px-6 py-3 text-lg font-medium text-white hover:opacity-90"
-              >
-                Pay Now
-              </button>
-            ) : (
-              <Link
-                href="/checkout"
-                className="block w-full text-center border border-[var(--color-bg)] text-[var(--color-bg)] font-semibold py-3 rounded-md hover:bg-[var(--color-bg)] hover:text-white transition"
-              >
-                CHECKOUT
-              </Link>
-            )}
+            <Link
+              href="/checkout"
+              className="block w-full text-center bg-[var(--color-bg)] text-white font-semibold py-3 rounded-md hover:opacity-90 transition"
+            >
+              CHECKOUT
+            </Link>
           </div>
         )}
       </div>

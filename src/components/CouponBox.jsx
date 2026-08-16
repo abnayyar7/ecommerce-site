@@ -30,7 +30,7 @@ export default function CouponBox() {
             <button
               onClick={() => applyCoupon(code)}
               disabled={isApplying || !code}
-              className="px-4 py-2 bg-black text-white rounded"
+              className="px-4 py-2 rounded border border-[var(--color-bg)] text-[var(--color-bg)] font-medium hover:bg-[var(--color-bg)] hover:text-white transition disabled:opacity-50"
             >
               Apply
             </button>

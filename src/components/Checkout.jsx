@@ -210,7 +210,6 @@ const Checkout = () => {
               total={total}
               products={products}
               mode={"checkout"}
-              makePurchase={makePurchase}
             />
           </div>
         </div>
