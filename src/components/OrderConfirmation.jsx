@@ -40,6 +40,19 @@ function getStatusConfig(status) {
     };
   }
 
+  // COD is the only payment method the store offers, so this is the status
+  // almost every real order lands on.
+  if (s === "cod_pending") {
+    return {
+      bg: "bg-[var(--color-bg)]",
+      Icon: CheckCircle,
+      title: "Order Received",
+      subtitle: "Your order is confirmed. Pay in cash when it arrives.",
+      badge: "bg-emerald-100 text-emerald-700",
+      label: "Order Placed",
+    };
+  }
+
   if (s === "pending" || s === "initiated" || s === "unknown") {
     return {
       bg: "bg-amber-500",
@@ -52,15 +65,34 @@ function getStatusConfig(status) {
     };
   }
 
-  // default (e.g. COD / processing)
+  // Unrecognised status. The label is deliberately a fixed human string: this
+  // used to fall back to the raw value, which rendered "cod_pending" to the
+  // customer. No DB enum should ever reach the page.
   return {
     bg: "bg-[var(--color-bg)]",
     Icon: CheckCircle,
     title: "Order Received",
     subtitle: "Thank you for your order!",
     badge: "bg-gray-100 text-gray-700",
-    label: status || "Processing",
+    label: "Processing",
   };
+}
+
+/**
+ * Human label for Payment.status. Reachable values today are "initiated"
+ * (schema default) and "pending" (set by /api/cod/create); the rest are here
+ * for a future gateway. Falls back to a fixed string, never the raw value.
+ */
+function getPaymentLabel(paymentStatus, paymentMethod) {
+  const s = String(paymentStatus || "").toLowerCase();
+  const isCod = String(paymentMethod || "").toUpperCase() === "COD";
+
+  if (s === "paid" || s === "success") return "Paid";
+  if (s === "failed" || s === "aborted") return "Failed";
+  if (s === "pending" || s === "initiated") {
+    return isCod ? "Pay on delivery" : "Awaiting confirmation";
+  }
+  return "Processing";
 }
 
 export default function OrderConfirmation({ orderId }) {
@@ -220,7 +252,10 @@ export default function OrderConfirmation({ orderId }) {
                       <span
                         className={`px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusConfig(order.payment.status).badge}`}
                       >
-                        {order.payment.status}
+                        {getPaymentLabel(
+                          order.payment.status,
+                          order.paymentMethod,
+                        )}
                       </span>
                     </div>
                     {order.payment.mode && (
