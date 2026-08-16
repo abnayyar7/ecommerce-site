@@ -176,8 +176,11 @@ export default function CheckoutAccordion() {
    */
   const effectiveSubtotal = appliedCoupon ? couponFinalAmount : total;
 
+  // Matches OrderSummary exactly — this used to carry an extra
+  // `effectiveSubtotal < 500` guard that OrderSummary did not, so the two
+  // could disagree about the shipping line on the same page.
   let shippingAmount = 0;
-  if (SHIPPING_ENABLED && effectiveSubtotal < 500) {
+  if (SHIPPING_ENABLED && effectiveSubtotal > 0) {
     const calculatedShipping = shippingCharges(state, effectiveSubtotal);
     if (Number.isFinite(calculatedShipping) && calculatedShipping > 0) {
       shippingAmount = calculatedShipping;

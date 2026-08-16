@@ -85,26 +85,15 @@ export default function ShippingDeliveryPolicyPage() {
             4. Shipping Charges
           </h2>
           <p>
-            Shipping charges are calculated at checkout and depend on your
-            location, total order weight, and delivery method.
+            <strong>Shipping is free on every order.</strong> There is no
+            minimum order value, no delivery charge, and no handling fee — the
+            price you see at checkout is the amount you pay.
           </p>
-          <ul className="list-disc list-inside space-y-2">
-            <li>
-              <strong>Free Shipping:</strong> Available on prepaid orders above
-              ₹999 within India.
-            </li>
-            <li>
-              <strong>Standard Shipping:</strong> ₹49–₹99 for orders below ₹999.
-            </li>
-            <li>
-              <strong>Cash on Delivery (COD):</strong> An additional COD
-              handling fee of ₹40 may apply.
-            </li>
-            <li>
-              <strong>International Shipping:</strong> Charges vary by country
-              and will be displayed at checkout.
-            </li>
-          </ul>
+          <p>
+            International orders may still attract customs duties or import fees
+            charged by the destination country. Those are levied by customs
+            authorities rather than by us — see International Shipping below.
+          </p>
 
           <h2 className="text-xl font-semibold text-gray-800">
             5. Order Updates

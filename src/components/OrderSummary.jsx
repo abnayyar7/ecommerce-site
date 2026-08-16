@@ -13,13 +13,11 @@ const OrderSummary = ({ total, products, mode, state }) => {
 
   // 🔑 Decide payable subtotal
   const effectiveSubtotal = appliedCoupon ? finalAmount : total;
+  // Matches CheckoutAccordion exactly. The state check is gone: it made the
+  // shipping line depend on whether an address had been entered yet, so cart
+  // and checkout could show different numbers for the same basket.
   let shipping = 0;
-  if (
-    SHIPPING_ENABLED &&
-    effectiveSubtotal > 0 &&
-    typeof state === "string" &&
-    state.trim()
-  ) {
+  if (SHIPPING_ENABLED && effectiveSubtotal > 0) {
     const calculatedShipping = shippingCharges(state, effectiveSubtotal);
     if (Number.isFinite(calculatedShipping) && calculatedShipping > 0) {
       shipping = calculatedShipping;
@@ -62,7 +60,9 @@ const OrderSummary = ({ total, products, mode, state }) => {
                 Shipping estimate
                 <FaCircleQuestion className="ml-2 h-4 w-4 text-gray-400" />
               </dt>
-              <dd className="text-sm font-semibold">₹{shipping.toFixed(2)}</dd>
+              <dd className="text-sm font-semibold">
+                {shipping > 0 ? `₹${shipping.toFixed(2)}` : "Free"}
+              </dd>
             </div>
 
             {/* Final total */}
