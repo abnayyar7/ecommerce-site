@@ -42,7 +42,6 @@ export { default as CustomButton } from "./CustomButton";
 export { default as QuantityInputCart } from "./QuantityInputCart";
 export { default as SectionTitle } from "./SectionTitle";
 export { default as OrderSummary } from "./OrderSummary";
-export { default as PaymentCOD } from "./payment/PaymentCOD";
 export { default as AboutUsComponent } from "./AboutUsComponent";
 export { default as ContactUsComponent } from "./ContactUsComponent";
 export { default as CartClient } from "./CartClient";
@@ -62,13 +61,11 @@ export { default as WishlistItem } from "./WishlistItem";
 export { default as Footer } from "./Footer";
 
 // Checkout
-export { default as Checkout } from "./Checkout";
 export { default as ContactDetails } from "./ContactDetails";
 export { default as CheckoutAccordion } from "./CheckoutAccordion";
 export { default as CheckoutAddress } from "./CheckoutAddress";
 export { default as Payment } from "./payment/Payment";
 export { default as CodPayment } from "./payment/CodPayment";
-export { default as CheckoutForm } from "./CheckoutForm";
 export { default as CouponBox } from "../components/CouponBox";
 
 // Misc Components
