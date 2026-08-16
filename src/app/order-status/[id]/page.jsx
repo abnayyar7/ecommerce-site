@@ -24,6 +24,16 @@ function statusViewFromOrder(order) {
   const payment = order?.payment || {};
   const responseCode = String(payment?.responseCode || "").trim();
   const paymentStatus = toLower(payment?.status);
+  const orderStatus = toLower(order?.status);
+  const isCod = toLower(order?.paymentMethod) === "cod";
+
+  // COD is checked first and on the ORDER status, which /api/cod/create sets.
+  // Reading payment.status alone sent every COD order to the gateway branch,
+  // which told a cash-on-delivery customer not to pay again.
+  if (orderStatus === "cod_pending") return "cod";
+  if (isCod && (paymentStatus === "pending" || paymentStatus === "initiated")) {
+    return "cod";
+  }
 
   if (responseCode === "0000" || paymentStatus === "success") return "success";
   if (
@@ -57,6 +67,20 @@ function formatMoney(value) {
 
 function StatusHeader({ view }) {
   switch (view) {
+    case "cod":
+      return (
+        <div className="rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 p-6 text-white shadow-lg">
+          <div className="flex items-center gap-3">
+            <CheckCircle2 className="h-8 w-8" />
+            <div>
+              <h1 className="text-2xl font-bold">Order Placed</h1>
+              <p className="text-sm text-emerald-50">
+                Your order is confirmed. Pay in cash when it arrives.
+              </p>
+            </div>
+          </div>
+        </div>
+      );
     case "success":
       return (
         <div className="rounded-2xl bg-gradient-to-br from-emerald-500 to-indigo-600 p-6 text-white shadow-lg">
@@ -253,6 +277,13 @@ export default function OrderStatusPage() {
                 {failureMessage}
               </p>
             )}
+            {view === "cod" && (
+              <p className="sm:col-span-2 rounded-lg bg-emerald-50 p-3 text-emerald-800">
+                Please keep the order total ready in cash for the delivery
+                agent. A confirmation email has been sent to the address on your
+                order.
+              </p>
+            )}
             {view === "pending" && (
               <p className="sm:col-span-2 rounded-lg bg-amber-50 p-3 text-amber-800">
                 We haven't received a confirmation from your bank yet. Please do
@@ -264,7 +295,7 @@ export default function OrderStatusPage() {
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          {view === "success" && (
+          {(view === "success" || view === "cod") && (
             <Link
               href="/shop"
               className="inline-flex items-center justify-center rounded-lg bg-[var(--color-bg)] px-5 py-2.5 text-sm font-semibold text-white"
