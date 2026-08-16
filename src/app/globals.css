@@ -3,7 +3,7 @@
 @import "react-datepicker/dist/react-datepicker.css";
 
 /* ============================
-   PRINT STYLES (PDF / Print)
+   PRINT STYLES
    ============================ */
 
 @media print {
@@ -22,29 +22,6 @@
     margin: 0 !important;
     padding: 0 !important;
     background: white !important;
-  }
-
-  /* Only show invoice */
-  body * {
-    visibility: hidden;
-  }
-
-  .invoice-print-root,
-  .invoice-print-root * {
-    visibility: visible;
-  }
-
-  .invoice-print-root {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-  }
-
-  /* Match browser card width */
-  #invoice-download {
-    max-width: 800px;
-    margin: 0 auto;
   }
 }
 
