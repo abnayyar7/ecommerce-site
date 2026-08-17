@@ -35,11 +35,11 @@ export default function NewsletterSignup({ isFooter = false }) {
   return (
     <>
       {!isFooter ? (
-        <section className="w-full max-w-2xl mx-auto my-16 rounded-3xl px-8 py-10 shadow-2xl bg-gradient-to-r from-[#eafbe4] via-white to-[#f6fef5] flex flex-col items-center border border-[var(--color-bg)]">
+        <section className="w-full max-w-2xl mx-auto my-16 rounded-3xl px-8 py-10 shadow-sm bg-[var(--color-inverted-bg)] flex flex-col items-center border border-[var(--color-bg)]">
           <div className="flex flex-col items-center mb-5">
             <MailCheck className="w-12 h-12 mb-2 text-[var(--color-bg)]" />
             <h2 className="text-2xl md:text-3xl font-extrabold text-[var(--color-bg)] text-center mb-2 tracking-wide">
-              Join our Style Club!
+              Join our Style Club
             </h2>
             <p className="text-center text-base md:text-lg text-[var(--color-bg)]/90 max-w-lg font-medium">
               Get ₹200 off your first order + unlock exclusive sales and fashion
@@ -47,9 +47,8 @@ export default function NewsletterSignup({ isFooter = false }) {
             </p>
           </div>
           {submitted ? (
-            <div className="text-green-700 font-semibold text-center mt-4">
-              🎉 You’re on the list! Check your email for a special welcome
-              offer.
+            <div className="text-[var(--color-bg)] font-semibold text-center mt-4">
+              You’re on the list. Check your email for a special welcome offer.
             </div>
           ) : (
             <form

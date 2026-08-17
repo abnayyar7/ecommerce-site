@@ -134,7 +134,7 @@ export default function OrderConfirmation({ orderId }) {
       : "Order Reference";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 px-4 py-14 flex justify-center">
+    <div className="min-h-screen bg-[var(--color-inverted-bg)] px-4 py-14 flex justify-center">
       <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden">
         {/* HEADER — dynamic per status */}
         <div className={`${cfg.bg} text-white p-10 text-center`}>

@@ -136,7 +136,7 @@ const Products = ({ slug, pageName, search }) => {
       {/* End of catalog */}
       {!hasMore && products.length > 0 && (
         <div className="text-center py-4 text-gray-400">
-          🎉 You’ve reached the end of the catalog.
+          You’ve reached the end of the catalog.
         </div>
       )}
     </>

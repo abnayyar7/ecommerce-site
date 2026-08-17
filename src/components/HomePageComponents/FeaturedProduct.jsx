@@ -81,7 +81,7 @@ export default function FeaturedProducts({ products = [] }) {
                     style={{ minHeight: "180px", maxHeight: "260px" }}
                     loading="lazy"
                   />
-                  <span className="absolute top-3 left-3 bg-yellow-400 text-xs px-2 py-1 rounded font-bold shadow-sm z-10">
+                  <span className="absolute top-3 left-3 bg-white/90 text-[var(--color-bg)] border border-[var(--color-bg)]/30 text-[11px] tracking-wide px-2 py-1 rounded font-normal z-10">
                     Featured
                   </span>
                 </div>

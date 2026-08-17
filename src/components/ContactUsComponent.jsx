@@ -37,7 +37,7 @@ export default function ContactUsComponent() {
         {/* Company Info */}
         <div className="max-w-2xl">
           <div className="space-y-8">
-            <div className="bg-gradient-to-br from-[var(--color-bg)] to-[#1a1245] rounded-2xl p-8 md:p-10 text-white shadow-lg">
+            <div className="bg-[var(--color-bg)] rounded-2xl p-8 md:p-10 text-white shadow-sm">
               {/* Company Header */}
               <h2 className="text-3xl md:text-4xl font-bold mb-2 text-[var(--secondary-color)]">
                 {contactInfo.company}

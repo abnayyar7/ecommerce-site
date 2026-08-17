@@ -69,7 +69,7 @@ function StatusHeader({ view }) {
   switch (view) {
     case "cod":
       return (
-        <div className="rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 p-6 text-white shadow-lg">
+        <div className="rounded-2xl bg-[var(--color-bg)] p-6 text-white shadow-lg">
           <div className="flex items-center gap-3">
             <CheckCircle2 className="h-8 w-8" />
             <div>
@@ -83,7 +83,7 @@ function StatusHeader({ view }) {
       );
     case "success":
       return (
-        <div className="rounded-2xl bg-gradient-to-br from-emerald-500 to-indigo-600 p-6 text-white shadow-lg">
+        <div className="rounded-2xl bg-[var(--color-bg)] p-6 text-white shadow-lg">
           <div className="flex items-center gap-3">
             <CheckCircle2 className="h-8 w-8" />
             <div>
@@ -97,7 +97,7 @@ function StatusHeader({ view }) {
       );
     case "failed":
       return (
-        <div className="rounded-2xl bg-gradient-to-br from-rose-500 to-red-700 p-6 text-white shadow-lg">
+        <div className="rounded-2xl bg-rose-700 p-6 text-white shadow-lg">
           <div className="flex items-center gap-3">
             <AlertCircle className="h-8 w-8" />
             <div>
@@ -111,7 +111,7 @@ function StatusHeader({ view }) {
       );
     default:
       return (
-        <div className="rounded-2xl bg-gradient-to-br from-amber-400 to-zinc-600 p-6 text-white shadow-lg">
+        <div className="rounded-2xl bg-amber-600 p-6 text-white shadow-lg">
           <div className="flex items-center gap-3">
             <Clock3 className="h-8 w-8" />
             <div>
