@@ -46,3 +46,25 @@ export const FALLBACK_METADATA = {
   title: "Not found",
   robots: { index: false, follow: false },
 };
+
+/**
+ * Category routes that exist as views rather than rows in the categories table.
+ *
+ * "footwear" is special-cased in src/app/api/products/route.js, which matches
+ * any subCategoryId containing "footwear" so men's and women's footwear list
+ * together. Because there is no matching row, anything that enumerates
+ * categories from the database misses it — that is how /footwear ended up
+ * noindex'd and absent from the sitemap.
+ *
+ * Both the [category] metadata and the sitemap read this, so the two cannot
+ * drift apart again.
+ */
+export const VIRTUAL_CATEGORIES = {
+  footwear: {
+    name: "Footwear",
+    description:
+      "Shop footwear at Velaura — hand-welted leather, suede and Italian calfskin for men and women.",
+    // Products whose subCategoryId contains this belong to the view.
+    subCategoryMatch: "footwear",
+  },
+};
