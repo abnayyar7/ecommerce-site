@@ -18,9 +18,10 @@ export default async function sitemap() {
   //   /wishlist, /order-confirmation
   //   /order-status/[id]          — per-order, requires an id
   //   /shop                       — also a category row, listed once below
+  //   /search                     — results page with no content of its own;
+  //                                 query strings spawn thin URL variants
   const staticRoutes = [
     "/",
-    "/search",
     "/about-us",
     "/contact-us",
     "/privacy-policy",
