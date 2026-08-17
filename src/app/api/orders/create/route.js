@@ -14,6 +14,67 @@ function isEnvFlagEnabled(value) {
   );
 }
 
+/**
+ * Saves the checkout address and maintains the default-address invariant:
+ * a signed-in user with at least one address always has EXACTLY ONE default.
+ *
+ * Rules:
+ *   - First address wins by default. Previously the clear-others step only ran
+ *     when the box was ticked, so a user who saved their first address
+ *     unchecked ended up with zero defaults.
+ *   - An explicit tick demotes every other address before this one is written.
+ *   - Otherwise the existing default is left alone.
+ *   - Guests (no userId) get no default handling at all.
+ *
+ * Must be called with a transaction client: the demotion and the write have to
+ * land together, and neither should survive a failed order.
+ */
+async function saveAddress(tx, { address, contact, userId }) {
+  const shared = {
+    address1: address.address1,
+    address2: address.address2 || null,
+    city: address.city,
+    state: address.state,
+    pincode: address.pincode,
+    country: "India",
+    landmark: address.landmark || null,
+    label: address.label || "HOME",
+    userId,
+  };
+
+  if (!userId) {
+    return address.id
+      ? tx.address.update({
+          where: { id: address.id },
+          data: { ...shared, isDefault: false },
+        })
+      : tx.address.create({
+          data: { ...shared, name: contact.name, phone: contact.phone, isDefault: false },
+        });
+  }
+
+  // "Other" excludes the row being edited, so re-saving a sole address still
+  // counts as the user's only one.
+  const otherCount = await tx.address.count({
+    where: { userId, ...(address.id ? { NOT: { id: address.id } } : {}) },
+  });
+
+  const isDefault = otherCount === 0 ? true : !!address.isDefault;
+
+  if (isDefault) {
+    await tx.address.updateMany({
+      where: { userId, ...(address.id ? { NOT: { id: address.id } } : {}) },
+      data: { isDefault: false },
+    });
+  }
+
+  return address.id
+    ? tx.address.update({ where: { id: address.id }, data: { ...shared, isDefault } })
+    : tx.address.create({
+        data: { ...shared, name: contact.name, phone: contact.phone, isDefault },
+      });
+}
+
 function generateOrderId() {
   const timestamp = Date.now(); // ms since epoch
   const random = Math.floor(10000 + Math.random() * 90000); // 5-digit
@@ -129,59 +190,14 @@ export async function POST(req) {
 
     const payableAmount = finalAmount + shippingAmount;
 
-    /* ------------------ DEFAULT ADDRESS RULE ------------------ */
+    /* ------------------ SAVE ADDRESS + UPSERT ORDER ------------------ */
 
-    if (address.isDefault) {
-      await prisma.address.updateMany({
-        where: { userId },
-        data: { isDefault: false },
-      });
-    }
-
-    /* ------------------ SAVE / UPDATE ADDRESS ------------------ */
-
-    let savedAddress;
-
-    if (address.id) {
-      savedAddress = await prisma.address.update({
-        where: { id: address.id },
-        data: {
-          address1: address.address1,
-          address2: address.address2 || null,
-          city: address.city,
-          state: address.state,
-          pincode: address.pincode,
-          country: "India",
-          landmark: address.landmark || null,
-          label: address.label || "HOME",
-          isDefault: address.isDefault || false,
-          userId,
-        },
-      });
-    } else {
-      savedAddress = await prisma.address.create({
-        data: {
-          name: contact.name,
-          phone: contact.phone,
-          address1: address.address1,
-          address2: address.address2 || null,
-          city: address.city,
-          state: address.state,
-          pincode: address.pincode,
-          country: "India",
-          landmark: address.landmark || null,
-          label: address.label || "HOME",
-          isDefault: address.isDefault || false,
-          userId,
-        },
-      });
-    }
-
-    /* ------------------ UPSERT ORDER ------------------ */
-
-    // The order write and the coupon usage record share one transaction: a
-    // failed order can never record usage, and a successful one always does.
+    // The address write, its default bookkeeping, the order and the coupon
+    // usage record all share one transaction: a failed order can never leave
+    // behind a recorded coupon use or a mutated set of address defaults.
     const order = await prisma.$transaction(async (tx) => {
+      const savedAddress = await saveAddress(tx, { address, contact, userId });
+
       const saved = await tx.order.upsert({
       where: { id: finalOrderId },
 
@@ -247,6 +263,15 @@ export async function POST(req) {
       }
 
       return saved;
+    },
+    {
+      // The default 5s ceiling is too tight now that the address write and its
+      // default bookkeeping share this transaction: against a remote database
+      // the round-trips here (address count, demote, write, order upsert with
+      // nested items, coupon usage) measured 4.9-5.3s, so orders failed
+      // intermittently on timeout.
+      timeout: 20000,
+      maxWait: 10000,
     });
 
     return NextResponse.json({
