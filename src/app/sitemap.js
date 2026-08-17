@@ -9,20 +9,24 @@ const prisma = new PrismaClient();
 const url = (path) => `${BRAND.siteUrl}${path}`;
 
 export default async function sitemap() {
-  // "/shop" is deliberately absent: it is also a category row, and listing it
-  // here as well produced a duplicate <loc> at a different priority.
+  // Public, indexable pages only.
+  //
+  // Deliberately absent:
+  //   /newsletter, /products      — no route exists; both 404
+  //   /login, /register, /cart,   — private or transactional; nothing to index,
+  //   /checkout, /profile,          and crawling them only burns crawl budget
+  //   /wishlist, /order-confirmation
+  //   /order-status/[id]          — per-order, requires an id
+  //   /shop                       — also a category row, listed once below
   const staticRoutes = [
     "/",
-    "/login",
-    "/register",
-    "/cart",
-    "/newsletter",
-    "/checkout",
-    "/order-confirmation",
-    "/products",
-    "/profile",
     "/search",
-    "/wishlist",
+    "/about-us",
+    "/contact-us",
+    "/privacy-policy",
+    "/return-and-refund",
+    "/shipping-delivery-policy",
+    "/terms-and-conditions",
   ].map((path) => ({
     url: url(path),
     changeFrequency: "weekly",
@@ -46,9 +50,13 @@ export default async function sitemap() {
 
   // Real category rows — these were missing entirely, so /men, /women, /kids,
   // /accessories and /shop were never advertised to crawlers.
+  //
+  // "shop" has no directly assigned products, so it falls back to the newest
+  // product overall — it lists the whole catalog, and that is its freshness.
+  const newestOverall = newestIn(() => true);
   const categoryRoutes = categories.map((c) => ({
     url: url(`/${c.slug}`),
-    lastModified: newestIn((p) => p.categoryId === c.id),
+    lastModified: newestIn((p) => p.categoryId === c.id) ?? newestOverall,
     changeFrequency: "weekly",
     priority: 0.8,
   }));
