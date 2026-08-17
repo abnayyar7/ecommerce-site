@@ -6,10 +6,6 @@ import {
   PromoStrip,
 } from "@/components";
 
-export const metadata = {
-  title: "Homepage",
-};
-
 const Homepage = () => {
   return (
     <div>

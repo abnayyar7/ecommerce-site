@@ -1,6 +1,4 @@
-export { default as Heading } from "./Heading";
 export { default as ProductItem } from "./ProductItem";
-export { default as ProductsSection } from "./ProductsSection";
 export { default as CategoryMenu } from "./Header/CategoryMenu";
 
 //Home Page Components
