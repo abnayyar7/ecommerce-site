@@ -39,7 +39,40 @@ export default function CheckoutAccordion() {
   })();
   const isLoggedIn = sessionStatus === "authenticated";
 
+  // Selected saved-address id. Drives which saved address becomes `editAddress`
+  // below, which the fill effect in CheckoutAddress uses to prefill the form.
   const [addressId, setAddressId] = useState(null);
+  const [savedAddresses, setSavedAddresses] = useState([]);
+
+  // Saved addresses — logged-in only. Guests never fetch; the list stays [].
+  useEffect(() => {
+    if (!isLoggedIn) {
+      setSavedAddresses([]);
+      return;
+    }
+    let active = true;
+    fetch("/api/address")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        if (active && Array.isArray(data)) setSavedAddresses(data);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [isLoggedIn]);
+
+  // When the Address section opens, auto-select the default (if one exists) so
+  // it prefills via CheckoutAddress's existing fill effect. Only runs when no
+  // selection has been made yet, so it never overrides a user's own choice.
+  useEffect(() => {
+    if (open !== "address" || addressId || savedAddresses.length === 0) return;
+    const def = savedAddresses.find((a) => a.isDefault);
+    if (def) setAddressId(def.id);
+  }, [open, addressId, savedAddresses]);
+
+  const selectedAddress =
+    savedAddresses.find((a) => a.id === addressId) || null;
 
   // ✅ Coupon UI state (preview only)
   const { appliedCoupon, finalAmount: couponFinalAmount } = useCouponStore();
@@ -232,8 +265,10 @@ export default function CheckoutAccordion() {
                 onClick={() => toggle("address")}
               >
                 <CheckoutAddress
-                  savedAddresses={[]}
-                  editAddress={savedData.address}
+                  savedAddresses={savedAddresses}
+                  selectedId={addressId}
+                  onSelectAddress={setAddressId}
+                  editAddress={selectedAddress ?? savedData.address}
                   onSaveAndNext={handleAddressNext}
                 />
               </AccordionItem>

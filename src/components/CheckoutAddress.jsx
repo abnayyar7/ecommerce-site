@@ -8,9 +8,12 @@ import { INDIAN_STATES } from "@/config/staticValue";
 
 export default function CheckoutAddress({
   savedAddresses = [],
+  selectedId = null,
+  onSelectAddress,
   onSaveAndNext,
   editAddress = null, // ✅ NEW
 }) {
+  const hasSaved = savedAddresses.length > 0;
   const [formValues, setFormValues] = useState({
     address1: "",
     address2: "",
@@ -101,6 +104,50 @@ export default function CheckoutAddress({
         </div>
       )}
 
+      {/* Saved-address selector — only when the user has ≥1 saved address.
+          Picking one sets the selection in the parent, which flows back as
+          editAddress and prefills the fields via the existing fill effect. */}
+      {hasSaved && (
+        <div className="space-y-2">
+          <p className="text-sm font-medium">Use a saved address</p>
+          <div className="space-y-2">
+            {savedAddresses.map((a) => {
+              const active = selectedId === a.id;
+              return (
+                <label
+                  key={a.id}
+                  className={`flex items-start gap-3 rounded-lg border p-3 cursor-pointer transition ${
+                    active
+                      ? "border-[var(--color-bg)] bg-[var(--color-inverted-bg)]"
+                      : "border-gray-300"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="savedAddress"
+                    className="mt-1"
+                    checked={active}
+                    onChange={() => onSelectAddress?.(a.id)}
+                  />
+                  <span className="text-sm leading-5">
+                    <span className="font-medium">{a.label || "Address"}</span>
+                    {a.isDefault && (
+                      <span className="ml-2 text-xs text-[var(--color-bg)]">
+                        (Default)
+                      </span>
+                    )}
+                    <br />
+                    {a.address1}
+                    {a.address2 ? `, ${a.address2}` : ""}, {a.city}, {a.state} -{" "}
+                    {a.pincode}
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       <FloatingInput
         name="address1"
         label="Address Line 1"
@@ -155,7 +202,7 @@ export default function CheckoutAddress({
           onChange={(e) => setSaveDefault(e.target.checked)}
         />
         <label htmlFor="saveDefault" className="text-sm">
-          Save as default address
+          {hasSaved ? "Save as default" : "Save this address"}
         </label>
       </div>
 
