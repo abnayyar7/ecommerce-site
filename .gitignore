@@ -19,3 +19,10 @@ src/scripts/generate-images.js
 src/scripts/generateImagePrompts.js
 src/scripts/product-image-prompts.json
 src/scripts/product-image-manifest.json
+
+# Playwright / test artifacts
+/test-results/
+/playwright-report/
+/screenshots/
+/tests/.baseline.json
+/tests/.auth/

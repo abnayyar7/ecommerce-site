@@ -11,7 +11,9 @@
     "lint": "next lint",
     "seed:catalog": "node src/scripts/insertDemoData.js",
     "seed:mock-addresses": "node src/scripts/seedMockAddresses.cjs",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "test:e2e": "playwright test",
+    "test:e2e:report": "playwright show-report"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -45,8 +47,9 @@
     "zustand": "^5.0.6"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4.1.12",
-    "@types/node": "24.2.1",
+    "@types/node": "^24.2.1",
     "@types/react": "19.1.8",
     "prisma": "^6.18.0",
     "tailwindcss": "^4",
