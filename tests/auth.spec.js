@@ -21,9 +21,16 @@ test("login via UI then logout", async ({ page, context }, testInfo) => {
   await page.goto("/login");
   await page.fill('input[name="email"]', user.email);
   await page.fill('input[name="password"]', PASSWORD);
-  await page.getByRole("button", { name: /Sign in/i }).click();
 
-  await expect.poll(async () => (await sessionUser(context))?.email, { timeout: 20000 }).toBe(user.email);
+  // The Sign in click can land before hydration and no-op; retry until the
+  // session is established. Only click while the Sign in button is still shown —
+  // once login registers and navigates away, just wait for the session to avoid
+  // clicking a button that no longer exists.
+  await expect(async () => {
+    const signIn = page.getByRole("button", { name: /Sign in/i });
+    if (await signIn.isVisible().catch(() => false)) await signIn.click();
+    expect((await sessionUser(context))?.email).toBe(user.email);
+  }).toPass({ timeout: 20000, intervals: [500, 1500, 3000] });
   await page.goto("/");
   await shot(page, testInfo, "auth-logged-in-home");
 

@@ -2,6 +2,7 @@ const { test, expect } = require("@playwright/test");
 const { shot } = require("./helpers/shot");
 const { createTestUser } = require("./helpers/db");
 const { loginViaApi } = require("./helpers/auth");
+const { clickUntil } = require("./helpers/interact");
 
 test("cart: add from PDP, view, update qty, remove", async ({ page, context }, testInfo) => {
   const user = await createTestUser({});
@@ -11,8 +12,12 @@ test("cart: add from PDP, view, update qty, remove", async ({ page, context }, t
   await page.waitForSelector('a[href^="/product/"]', { timeout: 30000 });
   const href = await page.locator('a[href^="/product/"]').first().getAttribute("href");
   await page.goto(href);
-  await page.getByRole("button", { name: /Add to cart/i }).click();
-  await page.waitForTimeout(2500);
+  // The Add-to-cart click can land before React hydrates the button, silently
+  // no-op'ing; retry until the success toast confirms the add registered.
+  await clickUntil(
+    page.getByRole("button", { name: /Add to cart/i }),
+    page.getByText(/added to the cart/i),
+  );
 
   await page.goto("/cart");
   // CartClient renders two responsive layouts; scope to the visible one.

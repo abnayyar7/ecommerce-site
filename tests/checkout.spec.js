@@ -2,13 +2,17 @@ const { test, expect } = require("@playwright/test");
 const { shot } = require("./helpers/shot");
 const { createTestUser } = require("./helpers/db");
 const { loginViaApi } = require("./helpers/auth");
+const { clickUntil } = require("./helpers/interact");
 
 async function fillContact(page) {
-  await page.fill('input[name="fullName"]', "PW Test");
-  await page.fill('input[name="email"]', "pw@example.invalid");
-  await page.fill('input[name="phone"]', "9876543210");
-  await page.getByRole("button", { name: /Proceed/i }).click();
-  await page.waitForTimeout(1500);
+  // Pre-hydration the fills can reset and the Proceed click can no-op; re-fill
+  // and re-click until the address step (address1 input) appears.
+  await clickUntil(async () => {
+    await page.fill('input[name="fullName"]', "PW Test");
+    await page.fill('input[name="email"]', "pw@example.invalid");
+    await page.fill('input[name="phone"]', "9876543210");
+    await page.getByRole("button", { name: /Proceed/i }).click();
+  }, page.locator('input[name="address1"]'), { timeout: 4000 });
 }
 
 async function selectState(page, name) {

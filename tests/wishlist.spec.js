@@ -2,6 +2,7 @@ const { test, expect } = require("@playwright/test");
 const { shot } = require("./helpers/shot");
 const { createTestUser } = require("./helpers/db");
 const { loginViaApi } = require("./helpers/auth");
+const { clickUntil } = require("./helpers/interact");
 
 test("wishlist: add from PDP, view, remove", async ({ page, context }, testInfo) => {
   const user = await createTestUser({});
@@ -12,9 +13,12 @@ test("wishlist: add from PDP, view, remove", async ({ page, context }, testInfo)
   const href = await page.locator('a[href^="/product/"]').first().getAttribute("href");
   await page.goto(href);
 
-  await page.getByText(/ADD TO WISHLIST/i).click();
-  // add completes when the button toggles state
-  await expect(page.getByText(/REMOVE FROM WISHLIST/i)).toBeVisible({ timeout: 15000 });
+  // The click can land before hydration and no-op; retry until the button
+  // toggles to REMOVE FROM WISHLIST, which confirms the add registered.
+  await clickUntil(
+    page.getByText(/ADD TO WISHLIST/i),
+    page.getByText(/REMOVE FROM WISHLIST/i),
+  );
   await shot(page, testInfo, "wishlist-added-on-pdp");
 
   await page.goto("/wishlist");
