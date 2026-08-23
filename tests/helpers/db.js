@@ -35,21 +35,55 @@ async function deleteUserCascade(userId) {
   await prisma.user.delete({ where: { id: userId } });
 }
 
+// A pooled Neon connection can be dropped after the client sits idle (e.g. a
+// long test run); the first query then fails with a connection error before
+// Prisma re-establishes it. Retry such operations a few times, forcing a
+// reconnect between attempts. Non-connection errors are re-thrown immediately.
+const CONNECTION_ERROR_CODES = new Set(["P1001", "P1002", "P1017"]);
+function isConnectionError(err) {
+  if (!err) return false;
+  if (CONNECTION_ERROR_CODES.has(err.code)) return true;
+  return /closed the connection|connection (closed|reset|terminated)|can't reach database|ECONNRESET/i.test(
+    err.message || "",
+  );
+}
+async function withDbRetry(fn, { tries = 4, delayMs = 1000 } = {}) {
+  let lastErr;
+  for (let i = 0; i < tries; i++) {
+    try {
+      return await fn();
+    } catch (err) {
+      if (!isConnectionError(err)) throw err;
+      lastErr = err;
+      try {
+        await prisma.$disconnect();
+        await prisma.$connect();
+      } catch {}
+      await new Promise((r) => setTimeout(r, delayMs));
+    }
+  }
+  throw lastErr;
+}
+
 // Purge ALL *@example.invalid users and their data. Idempotent — safe to run
 // before a run (clears orphans from a prior crash) and after (clears this run).
+// Wrapped in withDbRetry so a stale pooled connection doesn't leave test data
+// behind (and the reconnect also warms the client for the net-zero snapshot).
 async function purgeTestData() {
-  const users = await prisma.user.findMany({
-    where: { email: { endsWith: TEST_DOMAIN } },
-    select: { id: true },
+  return withDbRetry(async () => {
+    const users = await prisma.user.findMany({
+      where: { email: { endsWith: TEST_DOMAIN } },
+      select: { id: true },
+    });
+    let ordersRemoved = 0;
+    let addressesRemoved = 0;
+    for (const u of users) {
+      ordersRemoved += await prisma.order.count({ where: { userId: u.id } });
+      addressesRemoved += await prisma.address.count({ where: { userId: u.id } });
+      await deleteUserCascade(u.id);
+    }
+    return { users: users.length, orders: ordersRemoved, addresses: addressesRemoved };
   });
-  let ordersRemoved = 0;
-  let addressesRemoved = 0;
-  for (const u of users) {
-    ordersRemoved += await prisma.order.count({ where: { userId: u.id } });
-    addressesRemoved += await prisma.address.count({ where: { userId: u.id } });
-    await deleteUserCascade(u.id);
-  }
-  return { users: users.length, orders: ordersRemoved, addresses: addressesRemoved };
 }
 
 // Whole-table counts, for the net-zero before/after report.
