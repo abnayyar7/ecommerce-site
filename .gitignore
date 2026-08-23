@@ -26,3 +26,6 @@ src/scripts/product-image-manifest.json
 /screenshots/
 /tests/.baseline.json
 /tests/.auth/
+
+# Local backups (e.g. .env.bak) — never commit; may contain secrets
+*.bak
