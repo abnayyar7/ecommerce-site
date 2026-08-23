@@ -1,7 +1,6 @@
 // lib/data/catalog.js
 import { unstable_cache } from "next/cache";
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
 
 // ---- CATEGORIES ----
 export const getCategoriesCached = unstable_cache(

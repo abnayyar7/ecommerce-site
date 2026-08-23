@@ -1,8 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import { BRAND } from "@/config/brand";
 import { VIRTUAL_CATEGORIES } from "@/lib/seo";
 
-const prisma = new PrismaClient();
 
 // Paths already carry their leading slash, so join without adding another —
 // this previously produced "https://site//login" on every static route.
