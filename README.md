@@ -123,3 +123,9 @@ This is a live portfolio piece, not a claim of "finished" — the honest state:
 - **Known debt:** no linter is configured; the checkout page has some duplicate
   data fetches on load; a few files still use a raw Tailwind blue awaiting a
   palette decision. These are tracked, not forgotten.
+- **Add-to-cart before hydration:** an "Add to cart" (or wishlist / coupon) click
+  that lands before the page finishes hydrating can silently no-op — no request,
+  no confirmation, no error prompting a retry. A quick click on a freshly loaded
+  product page can do nothing. The e2e suite works around it; the app-side fix
+  (disable the control until interactive, or queue the intent) is a post-release
+  reliability item.
