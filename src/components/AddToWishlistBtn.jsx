@@ -36,8 +36,16 @@ const AddToWishlistBtn = ({ product }) => {
           return toast.error("Failed to add product to wishlist");
 
         const wishlistItem = await wishlistResponse.json();
-        addToWishlist(wishlistItem);
-        toast.success("Product added to the wishlist");
+        // The API returns HTTP 200 with { error: "Product already in wishlist" }
+        // when the item already exists. Only store a genuine created item —
+        // otherwise we'd push a junk object (no id, no product) into the store,
+        // which renders as a broken card.
+        if (wishlistItem?.id && wishlistItem?.product) {
+          addToWishlist(wishlistItem);
+          toast.success("Product added to the wishlist");
+        } else {
+          toast("Already in your wishlist");
+        }
       } else {
         toast.error(
           "You need to be logged in to add a product to the wishlist"
