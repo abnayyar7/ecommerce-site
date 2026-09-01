@@ -57,9 +57,9 @@ function getStatusConfig(status) {
     return {
       bg: "bg-amber-500",
       Icon: Clock,
-      title: "Payment Pending",
+      title: "Order Processing",
       subtitle:
-        "We're awaiting payment confirmation. We'll notify you shortly.",
+        "Your order is being processed — we'll be in touch if there are any updates to your delivery.",
       badge: "bg-amber-100 text-amber-700",
       label: "Pending",
     };
@@ -281,7 +281,7 @@ export default function OrderConfirmation({ orderId }) {
                 ? "You'll receive shipping updates on WhatsApp & Email."
                 : order.status === "failed" || order.status === "aborted"
                   ? "Please retry checkout or contact support if the issue persists."
-                  : "We'll notify you once your payment is confirmed."}
+                  : "We'll be in touch if there are any updates to your delivery."}
             </p>
 
             <div className="flex gap-3">
