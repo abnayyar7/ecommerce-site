@@ -1,87 +1,101 @@
-"use client";
 import Link from "next/link";
-import { Footprints } from "lucide-react";
-import ManIcon from "@mui/icons-material/Man";
-import WomanIcon from "@mui/icons-material/Woman";
-import ChildCareIcon from "@mui/icons-material/ChildCare";
-import HikingIcon from "@mui/icons-material/Hiking";
-import DiamondIcon from '@mui/icons-material/Diamond';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import Image from "next/image";
 
+// Borderless editorial showcase. Desktop is a 12-column asymmetric grid:
+// Men (hero, 5 cols) and Women (4 cols) run full height, while the right-most
+// 3-col column is split horizontally — Kids on top, Footwear on the bottom.
+// Tablet collapses to an even 2x2 grid; mobile becomes a horizontal snap-scroll.
+// Each image is scaled slightly (scale-[1.04] origin-top) and clipped by the
+// card's overflow-hidden, which pushes the bottom-right watermark off-screen
+// without cropping the source files. Labels live in a caption strip beneath the
+// image, so the photography itself stays clean and unobstructed.
 const categories = [
   {
     name: "Men",
+    num: "01",
     href: "/men",
-    icon: (
-      <ManIcon
-        sx={{ fontSize: 80 }}
-        className="w-16 h-16 text-[var(--color-bg)]"
-      />
-    ),
+    src: "/images/categories/category-men.jpg",
+    object: "object-top",
+    // Slight top-anchored zoom, clipped by overflow, drops the corner watermark.
+    crop: "origin-top scale-[1.04] group-hover:scale-[1.07]",
+    area: "lg:col-start-1 lg:row-start-1 lg:col-span-5 lg:row-span-2",
+    sizes: "(min-width:1024px) 42vw, (min-width:768px) 50vw, 82vw",
   },
   {
     name: "Women",
+    num: "02",
     href: "/women",
-    icon: (
-      <WomanIcon sx={{ fontSize: 80 }} className="w-16 h-16 text-pink-600" />
-    ),
+    src: "/images/categories/category-women.jpg",
+    object: "object-top",
+    crop: "origin-top scale-[1.04] group-hover:scale-[1.07]",
+    area: "lg:col-start-6 lg:row-start-1 lg:col-span-4 lg:row-span-2",
+    sizes: "(min-width:1024px) 34vw, (min-width:768px) 50vw, 82vw",
   },
   {
     name: "Kids",
+    num: "03",
     href: "/kids",
-    icon: (
-      <ChildCareIcon
-        sx={{ fontSize: 80 }}
-        className="w-16 h-16 text-yellow-600"
-      />
-    ),
+    src: "/images/categories/category-kids.jpg",
+    object: "object-top",
+    crop: "origin-top scale-[1.04] group-hover:scale-[1.07]",
+    area: "lg:col-start-10 lg:row-start-1 lg:col-span-3 lg:row-span-1",
+    sizes: "(min-width:1024px) 25vw, (min-width:768px) 50vw, 82vw",
   },
   {
     name: "Footwear",
+    num: "04",
+    // Shoes sit low in the frame, so anchor to the bottom edge. object-bottom
+    // re-pins the image bottom, so a top-only zoom can't reach the bottom-right
+    // watermark; a stronger top-left-anchored zoom clips it off the right/bottom
+    // while the (centred, higher) shoes stay fully in frame.
     href: "/footwear",
-    icon: <Footprints className="w-16 h-16 text-green-700" />,
+    src: "/images/categories/category-footwear.jpg",
+    object: "object-bottom",
+    crop: "origin-top-left scale-[1.13] group-hover:scale-[1.16]",
+    area: "lg:col-start-10 lg:row-start-2 lg:col-span-3 lg:row-span-1",
+    sizes: "(min-width:1024px) 25vw, (min-width:768px) 50vw, 82vw",
   },
 ];
 
-// {
-//   name: "Sale",
-//   href: "/sale",
-//   icon: <BadgePercent className="w-16 h-16 text-red-600" />,
-// },
 export default function CategoryShowcase() {
   return (
-    <div className="w-full max-w-7xl mx-auto px-2 py-12 rounded-xl bg-white/80">
-      <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-3 text-[var(--color-bg)] tracking-wider">
-        Shop by Category
-      </h2>
-      <p className="text-center text-lg md:text-xl text-gray-700 mb-10">
-        Find the perfect styles for everyone and every occasion
-      </p>
-
-      <div className="flex flex-wrap justify-center gap-8 items-stretch">
+    <section className="w-full max-w-7xl mx-auto my-10 md:my-14 px-4 md:px-0">
+      <div
+        className="flex gap-3 overflow-x-auto snap-x snap-mandatory
+          [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
+          md:grid md:grid-cols-2 md:overflow-visible
+          lg:grid-cols-12 lg:grid-rows-2 lg:h-[560px]"
+      >
         {categories.map((cat) => (
-          <Link key={cat.name} href={cat.href}>
-            <div className="group bg-white rounded-3xl shadow-xl hover:shadow-2xl p-8 w-52 h-64 flex flex-col items-center justify-center hover:-translate-y-1 transition-all border-2 border-gray-200 hover:border-[var(--color-bg)] cursor-pointer relative">
-              <div className="relative mb-5 flex items-center justify-center w-24 h-24">
-                <span className="inline-block group-hover:scale-110 transition-transform duration-300">
-                  {cat.icon}
-                </span>
-                {cat.name === "Sale" && (
-                  <span className="absolute -top-3 -right-4 bg-red-500 text-white px-3 py-1 text-sm rounded-lg animate-pulse">
-                    HOT
-                  </span>
-                )}
-              </div>
-              <span className="text-xl font-bold text-[var(--color-bg)] mb-1">
-                {cat.name}
+          <Link
+            key={cat.name}
+            href={cat.href}
+            aria-label={cat.name}
+            className={`group flex flex-col
+              w-[82vw] flex-shrink-0 snap-start
+              md:w-auto
+              lg:h-full ${cat.area}`}
+          >
+            {/* Image area — scaled + clipped to crop the corner watermark. */}
+            <div className="relative overflow-hidden h-[420px] md:h-[380px] lg:h-auto lg:flex-1 lg:min-h-0">
+              <Image
+                src={cat.src}
+                alt={cat.name}
+                fill
+                sizes={cat.sizes}
+                className={`object-cover ${cat.object} ${cat.crop} transition-transform duration-[600ms] ease-in-out`}
+              />
+            </div>
+
+            {/* Caption strip below the image — catalog numeral + category name. */}
+            <div className="bg-[#F4F1EB] border-t border-black/[0.08] py-3 px-1">
+              <span className="block whitespace-pre text-xs font-light uppercase tracking-[0.2em] text-[#1A1A1A]">
+                {`${cat.num}  ${cat.name}`}
               </span>
-              <button className="mt-2 bg-[var(--color-bg)] text-white text-base rounded-2xl px-6 py-2 font-semibold min-w-[160px] whitespace-nowrap">
-                Shop {cat.name}
-              </button>
             </div>
           </Link>
         ))}
       </div>
-    </div>
+    </section>
   );
 }
