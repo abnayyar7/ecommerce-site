@@ -45,22 +45,23 @@ export default function CheckoutAccordion() {
   const [savedAddresses, setSavedAddresses] = useState([]);
 
   // Saved addresses — logged-in only. Guests never fetch; the list stays [].
+  // Extracted so the address carousel/popup can refetch after a mutation.
+  const fetchAddresses = useCallback(() => {
+    return fetch("/api/address")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        if (Array.isArray(data)) setSavedAddresses(data);
+      })
+      .catch(() => {});
+  }, []);
+
   useEffect(() => {
     if (!isLoggedIn) {
       setSavedAddresses([]);
       return;
     }
-    let active = true;
-    fetch("/api/address")
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => {
-        if (active && Array.isArray(data)) setSavedAddresses(data);
-      })
-      .catch(() => {});
-    return () => {
-      active = false;
-    };
-  }, [isLoggedIn]);
+    fetchAddresses();
+  }, [isLoggedIn, fetchAddresses]);
 
   // When the Address section opens, auto-select the default (if one exists) so
   // it prefills via CheckoutAddress's existing fill effect. Only runs when no
@@ -270,6 +271,9 @@ export default function CheckoutAccordion() {
                   onSelectAddress={setAddressId}
                   editAddress={selectedAddress ?? savedData.address}
                   onSaveAndNext={handleAddressNext}
+                  isLoggedIn={isLoggedIn}
+                  onRefreshAddresses={fetchAddresses}
+                  alreadySubmitted={!!savedData.address}
                 />
               </AccordionItem>
 
